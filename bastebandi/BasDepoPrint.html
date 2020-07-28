@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="Scripts/jquery-3.2.1.min.js"></script>
+    <title>پرینت آمار دپو بسته بندی</title>
+</head>
+<style>
+    @font-face {
+        font-family: 'myfont';
+        src: url('fonts/Far_Nazanin.eot'), url('fonts/Far_Nazanin.eot?#FooAnything') format('embedded-opentype');
+        src: local('☺'), url('fonts/Far_Nazanin.ttf') format('truetype'), url('fonts/Far_Nazanin.svg') format('svg');
+        font-weight: 400;
+    }
+
+    body {
+        font-family: myfont;
+    }
+
+    @page {
+        size: A4;
+        margin: 7mm 10mm 3mm 9mm;
+    }
+
+    .table {
+        direction: rtl;
+        font-size: 12pt;
+        font-weight: 900;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table tr th {
+            padding: 8px 5px !important;
+            background-color: #f1f1f1;
+            border: 1px solid black;
+        }
+
+        .table td {
+            padding: 1px 2px !important;
+            text-align: center !important;
+            border: 1px solid black;
+            background-color: white;
+        }
+</style>
+<body>
+
+</body>
+<script>
+    function getParamsFromUrl(url) {
+        url = decodeURI(url);
+        if (typeof url === 'string') {
+            let params = url.split('?');
+            let eachParamsArr = params[1].split('&');
+            let obj = {};
+            if (eachParamsArr && eachParamsArr.length) {
+                eachParamsArr.map(param => {
+                    let keyValuePair = param.split('=')
+                    let key = keyValuePair[0];
+                    let value = keyValuePair[1];
+                    obj[key] = value;
+                })
+            }
+            return obj;
+        }
+    }
+
+    function CreateTable() {
+        const p = getParamsFromUrl(window.location.href);
+        const CreatePages = (pages, d) => {
+            var str = [];
+            var counter = 1;
+            var rows = d.length;
+            var rowInpages = 40;
+            for (var j = 0; j < pages; j++) {
+                str.push('<div id="print' + j + '" style="width: 205mm; height: 297mm;margin-bottom:200px;"><table id="tblItems" class="table table-bordered">');
+                str.push('<tr><th>ردیف</th><th>شرح کــالا</th><th>درجه</th><th>تعداد کارتن</th><th>تعداد واحد در کارتن</th><th>تعداد کل</th></tr>');
+                for (; counter < rows;) {
+                    str.push('<tr><td>' + (counter) + '</td><td>' + d[counter].Kala + '</td>' +
+                        '<td>' + d[counter].Darage + '</td><td>' + d[counter].Tedadd + '</td>' +
+                        '<td>' + d[counter].TedadKarton + '</td><td>' + d[counter].TedadKol + '</td></tr>');
+                    counter++;
+                    if (counter > ((j + 1) * rowInpages)) break;
+                }
+                str.push('</table></div>');
+            }
+            $('body').empty().append(str.join(''));
+            $('body').find('div:last-child').css('margin-bottom', '0');
+
+        }
+        $.ajax({
+            type: 'POST',
+            url: 'depoitems.asmx/SearchInBasDepo',
+            data: JSON.stringify({
+                item: p.i,
+                gol: p.g,
+                rang: p.r,
+                darage: p.d,
+                format: p.f,
+                type: p.t,
+                moshtari: p.m,
+                abgoriz: p.ab,
+                antibacterial: p.ant
+            }),
+            contentType: 'application/json;',
+            dataType: 'json',
+            success: (e) => {
+                var d = JSON.parse(e.d);
+                if (!d.length) return;
+                CreatePages(Math.ceil(d.length / 40), d);
+            },
+            error: function () {
+                console.log('error');
+            }
+        });
+    }
+
+    CreateTable();
+</script>
+</html>

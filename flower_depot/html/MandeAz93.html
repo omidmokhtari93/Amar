@@ -1,0 +1,266 @@
+﻿<script src="~/bastebandi/Scripts/notify.min.js"></script>
+<style>
+    table tr td input[type=checkbox],
+    table tr th input[type=checkbox] {
+        vertical-align: middle;
+        margin-top: 0;
+        width: 15px;
+        height: 15px
+    }
+
+    .loading {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 4px;
+        margin-left: 15px;
+    }
+
+    .mojoodi-table tr th {
+        border: 1px solid darkgray;
+        padding: 0 2px;
+        text-align: center;
+        font-size: 11pt;
+    }
+
+    .mojoodi-table {
+        width: 200px;
+        display: inline-block;
+        margin: 5px;
+        vertical-align: top;
+    }
+
+        .mojoodi-table tr td {
+            text-align: center;
+            border-collapse: collapse;
+            border: 1px solid darkgray;
+            background-color: white;
+            padding: 1px;
+        }
+    #tableGols tr th {
+        cursor: pointer;
+    }
+</style>
+<div class="panel panel-primary">
+    <div class="panel-heading">گل های مانده از سال 93</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4 text-left">
+                <div id="GozareshControls" style="display: none;">
+                    <button class="button" id="btnGozaresh" type="button" style="float: left;">مشاهده گزارش آیتم ها</button>
+                    <select class="form-control" style="float: left; margin-left: 15px;" id="drArrangeType">
+                        <option value="1">سرویسی</option>
+                        <option value="2">فله</option>
+                        <option value="-1">فله و سرویسی</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <input type="button" value="مشاهده گل های مانده" onclick="GetGols()" class="button">
+                <select class="form-control" id="drMoshtari"></select> : نام مشتری
+                <img src="../../bastebandi/Images/pIkfp.gif" class="loading" style="display: none;" />
+            </div>
+            <div class="col-md-4 text-right">
+                <input class="form-control text-right" placeholder="... فیلتر گل" style="float: right;" id="txtFilter" oninput="FilterTable()" />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 15px;">
+            <div class="col-md-12 text-center">
+                <table class="table table-bordered" id="tableGols"></table>
+                <div id="reportArea"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var loading = $('.loading');
+    function ElementRedalert(ele, pos, txt) {
+        var element;
+        if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+        $(element).notify(txt, { position: pos, className: "error" });
+    }
+    function AjaxData(obj) {
+        $.ajax({
+            type: 'POST',
+            url: obj.url,
+            data: JSON.stringify(obj.param),
+            contentType: 'application/json;',
+            dataType: 'json',
+            success: obj.func,
+            error: function () {
+                console.log('error');
+            }
+        });
+    }
+
+    $(function () {
+        fillControlss();
+        function fillControlss() {
+            AjaxData({
+                url: 'amar.asmx/FillControls',
+                param: {},
+                func: fillControls
+            });
+
+            function fillControls(e) {
+                var d = JSON.parse(e.d);
+                var moshtariOptions = ['<option value="-1">انتخاب کنید</option>'];
+                for (var i = 0; i < d[2].Id.length; i++) {
+                    moshtariOptions.push('<option value="' + d[2].Id[i] + '">' + d[2].Text[i] + '</option>');
+                }
+                $('#drMoshtari').append(moshtariOptions.join(''));
+            }
+        }
+    })
+    function GetGols() {
+        if ($('#drMoshtari :selected').val() == '-1') {
+            ElementRedalert('drMoshtari', 'top center', 'لطفا مشتری را انتخاب نمایید')
+            return;
+        }
+        loading.show();
+        AjaxData({
+            url: 'amar.asmx/GetGolAfter93',
+            param: { customer: $('#drMoshtari :selected').val() },
+            func: createTable
+        })
+
+        function createTable(e) {
+            var data = JSON.parse(e.d);
+            if (!data.length) {
+                loading.hide();
+                return
+            };
+            var tableBody = ['<tr>' +
+                '<th>ردیف</th>' +
+                '<th><input type="checkbox"/></th>' +
+                '<th>نام گل</th>' +
+                '<th>رنگ</th>' +
+                '<th>نوع</th>' +
+                '<th>قالب</th>' +
+                '<th>کد</th>' +
+                '<th>تاریخ</th>' +
+                '<th>مشتری</th>' +
+                '<th>شرکت</th>' +
+                '<th>توضیحات</th>' +
+                '</tr>'];
+            for (var i = 0; i < data.length; i++) {
+                tableBody.push('<tr>' +
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td><input type="checkbox"/></td>' +
+                    '<td golid="' + data[i].Id + '">' + data[i].GolName + '</td>' +
+                    '<td>' + data[i].Color + '</td>' +
+                    '<td>' + data[i].ColorType + '</td>' +
+                    '<td>' + data[i].Format + '</td>' +
+                    '<td>' + data[i].Code + '</td>' +
+                    '<td>' + data[i].EnterDate + '</td>' +
+                    '<td>' + data[i].Customer + '</td>' +
+                    '<td>' + data[i].Company + '</td>' +
+                    '<td>' + data[i].Comment + '</td>' +
+                    '</tr>')
+            }
+            $('#tableGols').empty().append(tableBody.join(''));
+            $('#GozareshControls').show();
+            $('#reportArea').empty();
+            loading.hide();
+        }
+    }
+
+    function GetTableCheckbox() {
+        var checked = []
+        $('#tableGols tr:not([style="display: none;"]) td input[type=checkbox]:checked').each(function (x, y) {
+            checked.push($(this).parent().parent().find('td:eq(2)').attr('golid'));
+        });
+        return checked;
+    }
+
+    $(document).on('click',
+        'table tr th input[type=checkbox]',
+        function (parameters) {
+            if (this.checked) {
+                $('#tableGols tr td input[type=checkbox]').prop('checked', true);
+            } else {
+                $('#tableGols tr td input[type=checkbox]').prop('checked', false);
+            }
+
+        });
+
+    $('#btnGozaresh').on('click', function () {
+        if (GetTableCheckbox().length) {
+            loading.show();
+            AjaxData({
+                url: 'amar.asmx/GetGozareshItems',
+                param: {
+                    gols: GetTableCheckbox(),
+                    arrangeType: $('#drArrangeType :selected').val()
+                },
+                func: createGozareshTabel
+            })
+
+            function createGozareshTabel(e) {
+                var d = JSON.parse(e.d);
+                var body = [];
+                for (var i = 0; i < d.length; i++) {
+                    body.push('<table class="mojoodi-table" style="width:15%;">' +
+                        '<tr>' +
+                        '<th colspan="2" style="font-weight:800;width:15%;">' + d[i].Gol + '</th>' +
+                        '</tr>');
+                    for (var j = 0; j < d[i].Itemses.length; j++) {
+                        if (parseInt(d[i].Itemses[j].Tedad) > 0) {
+                            body.push('<tr>' +
+                                '<td style="padding:1px;">' + d[i].Itemses[j].Tedad + '</td>' +
+                                '<td style="padding:1px;">' + d[i].Itemses[j].Item + '</td>' +
+                                '</tr>')
+                        }
+                    }
+                    body.push('</table>');
+                }
+                $('#tableGols').empty();
+                $('#reportArea').append('<div style="margin-bottom:15px;">' + $('#drArrangeType :selected').text() + '</div>');
+                $('#reportArea').append(body.join(''));
+                $('#GozareshControls').hide();
+                loading.hide();
+                $('#reportArea').find('table').each(function (index, element) {
+                    if ($(element).find('tr').length === 1) {
+                        $(element).remove();
+                    }
+                });
+            }
+        }
+    })
+    function FilterTable() {
+        var input, filter, table, tr, td, cell, i, j;
+        input = document.getElementById("txtFilter");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tableGols");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            tr[i].style.display = "none";
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                cell = tr[i].getElementsByTagName("td")[j];
+                if (cell) {
+                    if (cell.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    $(document).on('click', '#tableGols th', function () {
+        if ($(this).index() === 1) { return; }
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+        loading.hide();
+    })
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        }
+    }
+    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+</script>

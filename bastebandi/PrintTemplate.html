@@ -1,0 +1,70 @@
+﻿<div style="text-align: center; width: 210mm; height: 296mm; position: relative; margin: auto; margin-bottom: 300px;" id="printHavaleh">
+    <style>
+        @media print {
+            .square {
+                height: 13px;
+                width: 13px;
+                border: 1px solid black;
+                vertical-align: middle;
+            }
+            .table { direction: rtl;  font-size: 13pt; font-weight : 900;width: 100%;border-collapse: collapse;margin: 0;}
+            .table tr th { padding: 14px 5px !important; background-color:#f1f1f1;border: 1px solid black;}
+            .table td { padding: 1px 2px !important;text-align: center !important;border: 1px solid black;}
+            .havalehHeader{ display: block !important;}
+            .havalehFooter{padding: 0;bottom: -37px!important;}
+            .hidetd , .pagerCss{ display: none !important;}
+            .pnlgrid{ padding-top: 105px !important;}
+            .kalaname{display:block;text-align:right;margin:0;padding-right:10px;}
+            #footerARea{border: 1px solid #000000;}
+            .kalaname {display: block;text-align: right;margin: 0;padding-right: 10px;}
+        }
+        @page {
+            size: A4;
+            margin: 3mm 2mm 3.5mm 2mm;
+        }
+    </style>
+    <div style="width: 100%;position: absolute; top: 0; left: 0; height: 100px; background-color: white;font-weight: 900;" class="havalehHeader">
+        <label style="font-family: tahoma!important; font-size: 10pt; position: absolute; top: 5px; left: 5px;">FWH050 : کد فرم</label>
+        <label style="position: absolute; top: 40px; left: 20px;">#lblShHavaleh#</label>
+        <label style="position: absolute; top: 45px; left: 5px;">........................................ : شماره برگ خروج</label>
+        <label style="position: absolute; top: 70px; left: 20px;">#lblDateHavaleh#</label>
+        <label style="position: absolute; top: 75px; left: 5px;">........................................ : تاریخ خروج</label>
+        <h3 style="position: absolute; top: -20px; left: 40%; font-weight: 800;">شرکت صنایع چینی تقدیس</h3>
+        <h5 style="position: absolute; top: 20px; left: 44%; font-weight: 800; ">حواله خروج کالا از انبار</h5>
+        <img src="Images/arm-n.jpg" style="position: absolute; right: 5px; top: 5px; height: 90px;width: auto;"/>
+        <label style="position: absolute; right: 70px; top: 45px;"> : نام خریدار</label>
+        <label style="position: absolute; right: 140px; top: 45px;">#lblKharidar#</label>
+        <label style="position: absolute; right: 70px; top: 75px;"> : آدرس خریدار</label>
+        <label style="position: absolute; right: 150px; top: 75px;">#lblAddKharidar#</label>
+    </div>
+
+    <div class="pnlgrid">
+        <table id="tblKala0" class="table table-bordered">
+            <tbody></tbody>
+        </table>
+    </div>
+       
+    <div style="position: absolute; bottom: 0; left: 0px; width: 791px;" id="havalehFooter" class="havalehFooter">
+        <div id="footerARea" style="background-color: white; text-align: center; width: 791px; padding-top: 5px; font-weight: 900;">
+            <div style="padding: 5px;">
+                <div style="width: 180px; display: inline-block;"><div style="display: inline-block;" class="square"></div>  نسخه چهارم : نگهبان</div>
+                <div style="width: 180px; display: inline-block;"><div style="display: inline-block;" class="square"></div>  نسخه سوم : اداره فروش</div>
+                <div style="width: 180px; display: inline-block;"><div style="display: inline-block;" class="square"></div>  نسخه دوم : امور مالی</div>
+                <div style="width: 180px; display: inline-block;"><div style="display: inline-block;" class="square"></div>  نسخه اول : خریدار</div>
+            </div>
+            <div style="padding: 15px; width: 100%; position: relative;">
+                <label style="position: absolute; top: 5px; right: 270px;">#lblDriverName#</label>
+                <label style="position: absolute; top: 5px; left: 200px; direction: rtl;">#lblShPelak#</label>
+                <label style="position: absolute; top: 10px; right: 90px;">.کالای فوق صحیحا تحویل اینجانب................................................... راننده 
+                    <span style="display: inline-block;"> تک <span style="display: inline-block;" class="square"></span></span>
+                    <span style="display: inline-block;"> خاور <span style="display: inline-block;" class="square"></span></span>
+                ..................................................گردید</label>
+            </div>
+            <div style="padding: 15px; width: 100%;">
+                <img src="Images/4.png" style="position: absolute; width: 150px; height: auto; bottom: 0px; left: 110px;"/>
+                <label style="width: 100%;">..................................................  تنظیم کننده..................................................مسئول انبار..................................................مدیر کارخانه </label>
+                <label id="page0" style="position: absolute; left: 5px; bottom: 0;"></label>
+            </div>
+        </div>
+    </div>
+</div>

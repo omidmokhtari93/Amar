@@ -1,0 +1,82 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="Decor_MasterPage" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <script src="../Decor/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="../Decor/Scripts/checkorder.js"></script>
+    <link href="../Decor/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="../Decor/Scripts/bootstrap.js"></script>
+    <script src="../Decor/Scripts/notify.min.js"></script>
+    <link href="../Decor/Scripts/styles.css" rel="stylesheet" />
+    <link href="../Decor/Scripts/modal.css" rel="stylesheet" />
+    <link href="../Images/favicon.ico" rel="shortcut icon"/>
+    <title> سامانه ثبت آمار و برنامه ریزی </title>
+</head>
+<body style="background-image: url(Images/logo1.jpg);">
+<form id="form1" class="form-inline" runat="server">
+    <div>
+        <div style="text-align: center !important;">
+            <nav>
+                <ul>
+                    <li><a><asp:Button CssClass="NavTextstyle" Text="خروج"  runat="server" ID="btn_exit" OnClick="btn_exit_OnClick"/></a></li>            
+                    
+                    <li><a>گزارشات</a>
+                        
+                    </li>
+                    <%--<li><a>جستجو</a></li>--%>
+                    <li><a runat="server" id="btnSabt">مشاهده آمار واحدها</a>
+                        <ul>
+                            <li><a href="Depo.aspx">موجودی بسته بندی</a></li>
+                            <li><a href="Grade.aspx">آمار درجه بندی</a></li>
+                           <li><a href="Glaze.aspx">آمارلعاب</a></li>
+                           <li><a href="AnbarGol.aspx">انبار گل</a></li>
+                        </ul> 
+                    </li>
+                    <li><a runat="server" id="btndepo" href="Gradedepo.aspx">دپوی درجه بندی</a></li>
+                    <li><a runat="server" id="A1" >دپوی دکور</a></li>
+                    <li><a runat="server" href="RecordPer.aspx" id="btnPerRecord">ثبت رکورد پرسنلی</a></li>
+                    <li><a runat="server" href="PerProgram.aspx" id="btnPersonel">ثبت آمار پرسنلی</a></li>
+                </ul>
+            </nav>
+            <asp:Panel Width="80%" class="panel panel-default"  ID="Panel1" runat="server" style="margin: auto;">
+                <div class="panelshadow">
+                    <div class="panel-body" id="main_panel" style="background-color: #eaf4fa;">
+                        <asp:ContentPlaceHolder ClientIDMode="Static" id="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+                    </div>
+                </div>
+            </asp:Panel>
+        </div>
+    </div>
+    <asp:HiddenField id="uid" runat="server" ClientIDMode="Static"></asp:HiddenField>
+    <script>
+        function RedAlert(ele, txt) {
+            var element;
+            if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+            $(element).addClass('form-controlError');
+            setTimeout(function () { $(element).removeClass("form-controlError"); }, 4000);
+            $.notify(txt, { globalPosition: 'top left' });
+        }
+
+        function GreenAlert(ele, txt) {
+            var element;
+            if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+            $(element).css('background-color', 'lightgreen');
+            setTimeout(function () { $(element).removeAttr('style'); }, 4000);
+            $.notify(txt, { className: 'success', clickToHide: false, autoHide: true, position: 'top left' });
+        }
+
+        function ClearFields(div) {
+            $('#' + div).find('input:text').val('');
+            $('#' + div).find('textarea').val('');
+            $('#' + div).find('input').val('');
+            $('#' + div).find("select").prop('selectedIndex', 0);
+        }
+        //$('li > ul > li > a ,.button , table tr a').on("click", function () {
+        //    $("body").addClass("loading");
+        //});
+    </script>
+    <div class="loadingmodal"></div>
+</form>
+</body>
+</html>

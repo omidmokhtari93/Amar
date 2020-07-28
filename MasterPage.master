@@ -1,0 +1,60 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage"   %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="Images/favicon.ico" rel="shortcut icon">
+</head>
+<body bgcolor="#ffeaea">
+    <form id="form1" runat="server">
+    <table ID="tbldate"  style="width: 100%;">
+    <tr>
+    <td>
+    <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/header-amar.jpg" 
+        Width="100%" Height="219px"  />
+      </td>
+    </tr>  
+     <tr><td>   
+   <!-- <div  style="display:table;width:100%">!-->
+    <div  style="display:table-cell;width:80%;float:left;min-height:570px">
+       <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+        </div>
+         <div  style="display:table-cell;width:20%;float:left">
+        
+                  <div dir="rtl">
+
+                    <asp:TreeView ID="trw" runat="server" ShowLines="True" CollapseImageToolTip="" 
+                     ExpandImageToolTip="" SkipLinkText=""  LineImagesFolder="Images/Lines" 
+                     onselectednodechanged="trw_SelectedNodeChanged" Font-Names="Tahoma" 
+                          Font-Size="Small" />
+                 </div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder2" runat="server" >
+
+       
+        </asp:ContentPlaceHolder>
+    </div>
+  <!--  </div>!-->
+     </td></tr>
+   <tr><td>
+   <div  style="width: 100%; height: 35px; margin-top: 1px; background-image: url('../Images/footer1.jpg');">
+      
+      <marquee direction=right style="margin-top: 8px">
+      <asp:Label ID="Label2" runat="server" Font-Names="tahoma" Font-Size="Small" Font-Bold="true" ForeColor="Black"  
+                   ></asp:Label>
+        <asp:Label ID="Label1" runat="server" Font-Names="tahoma" Font-Bold="True" Font-Size="Small"   
+   ForeColor="black" 
+            
+          Text="سامانه ثبت آمار و برنامه ریزی******************** شرکت صنایع چینی تقدیس ************************* تهیه شده توسط واحد نرم افزار"></asp:Label></marquee>
+    </div>
+     </td></tr>
+    </table>
+    
+    </form>
+</body>
+</html>

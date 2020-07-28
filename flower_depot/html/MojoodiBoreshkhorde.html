@@ -1,0 +1,227 @@
+﻿<link href="../../flower_depot/Scripts/search.css" rel="stylesheet" />
+<script src="../../flower_depot/Scripts/search.js"></script>
+<style>
+    .loading {
+        width: 20px;
+        height: auto;
+        margin-top: 3px;
+        display: none;
+        float: left;
+    }
+
+    .mojoodi-table tr th {
+        border: 1px solid darkgray;
+        padding: 0 2px;
+        text-align: center;
+        font-size: 11pt;
+    }
+
+    .mojoodi-table {
+        width: 200px;
+        display: inline-block;
+        margin: 5px;
+        vertical-align: top;
+    }
+
+        .mojoodi-table tr td {
+            text-align: center;
+            border-collapse: collapse;
+            border: 1px solid darkgray;
+            background-color: white;
+            padding: 1px;
+        }
+</style>
+<link href="../../flower_depot/Scripts/kamadatepicker.css" rel="stylesheet" />
+<script src="../../flower_depot/Scripts/kamadatepicker.js"></script>
+<script src="../../bastebandi/Scripts/notify.min.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">موجودی برش خورده ها</div>
+    <div class="panel-body">
+        <div class="row" style="margin: 0;">
+            <div class="col-md-6 text-right">
+                تا تاریخ
+                <input class="form-control text-center" id="from" style="width: 100%;" readonly />
+            </div>
+            <div class="col-md-6 text-right">
+                از تاریخ
+                <input class="form-control text-center" id="to" style="width: 100%;" readonly />
+            </div>
+        </div>
+        <div class="row" style="margin: 0; margin-top: 15px;">
+            <div class="col-md-2">
+                <button class="button" id="btn" style="width: 100%;" type="button" onclick="Gozareshgiri()">
+                    <img src="../../bastebandi/Images/pIkfp.gif" class="loading" />  گزارش گیری
+                </button>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" id="drtype" style="width: 100%; direction: rtl;">
+                    <option value="-1">همه</option>
+                    <option value="1">ماکرویو</option>
+                    <option value="2">معمولی</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" id="drcompany" style="width: 100%; direction: rtl;">
+                    <option value="-1">همه شرکت ها</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" id="drmoshtari" style="width: 100%; direction: rtl;">
+                    <option value="-1">همه مشتری ها</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-control" id="drformat" style="width: 100%; direction: rtl;">
+                    <option value="-1">همه قالب ها</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div id="searchitem"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-center" id="footer">
+    </div>
+</div>
+<input type="hidden" id="company" />
+<script>
+    $('#searchitem').search({
+        width: '100%',
+        placeholder: 'جستجوی آیتم ...',
+        url: 'amar.asmx/FilterItems',
+        arg: 'itemName',
+        text: 'Name',
+        id: 'Id',
+        append: {
+            text: 'همه ی آیتم ها',
+            id: -1
+        }
+    });
+    var customOptions = {
+        placeholder: "روز / ماه / سال",
+        twodigit: true,
+        closeAfterSelect: true,
+        nextButtonIcon: "glyphicon glyphicon-chevron-right",
+        previousButtonIcon: "glyphicon glyphicon-chevron-left",
+        buttonsColor: "blue",
+        forceFarsiDigits: true,
+        markToday: true,
+        markHolidays: true,
+        highlightSelectedDay: true,
+        sync: true,
+        gotoToday: true
+    };
+    kamaDatepicker('from', customOptions);
+    kamaDatepicker('to', customOptions);
+    function ElementRedalert(ele, pos, txt) {
+        var element;
+        if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+        $(element).notify(txt, { position: pos, className: "error" });
+    }
+    function AjaxData(obj) {
+        $.ajax({
+            type: 'POST',
+            url: obj.url,
+            data: JSON.stringify(obj.param),
+            contentType: 'application/json;',
+            dataType: 'json',
+            success: obj.func,
+            error: function () {
+                console.log('error');
+            }
+        });
+    }
+
+    $('#dritem').change(function () {
+        var d = [];
+        $('#dritem :selected').each(function (x, y) {
+            d.push(y.value)
+        })
+        $('#company').val(d.join(','));
+    });
+
+    $(function () {
+        fillControlss();
+        function fillControlss() {
+            AjaxData({
+                url: 'amar.asmx/FillControls',
+                param: {},
+                func: fillControls
+            });
+
+            function fillControls(e) {
+                var d = JSON.parse(e.d);
+                var itemOptions = [], formatOptions = [], moshtariOptions = [], companyOptions = [];
+                for (var i = 0; i < d[0].Id.length; i++) {
+                    itemOptions.push('<option value="' + d[0].Id[i] + '">' + d[0].Text[i] + '</option>');
+                }
+                for (var i = 0; i < d[1].Id.length; i++) {
+                    formatOptions.push('<option value="' + d[1].Id[i] + '">' + d[1].Text[i] + '</option>');
+                }
+                for (var i = 0; i < d[2].Id.length; i++) {
+                    moshtariOptions.push('<option value="' + d[2].Id[i] + '">' + d[2].Text[i] + '</option>');
+                }
+                for (var i = 0; i < d[3].Id.length; i++) {
+                    companyOptions.push('<option value="' + d[3].Id[i] + '">' + d[3].Text[i] + '</option>');
+                }
+                $('#dritem').append(itemOptions.join(''));
+                $('#drformat').append(formatOptions.join(''));
+                $('#drmoshtari').append(moshtariOptions.join(''));
+                $('#drcompany').append(companyOptions.join(''));
+            }
+        }
+    })
+    function Gozareshgiri() {
+        if ($('#from').val() == '' || $('#to').val() == '') {
+            ElementRedalert('btn', 'top center', 'لطفا بازه ی تاریخ را مشخص نمایید')
+            return;
+        }
+        if ($('#searchitem').attr('value') == undefined || $('#searchitem').attr('value') == '') {
+            ElementRedalert('GetReport', 'bottom center', 'لطفا آیتم را مشخص نمایید');
+            return;
+        }
+        $('.loading').show();
+        var obj = {
+            Item: $('#searchitem').attr('value'),
+            Format: $('#drformat :selected').val(),
+            Moshtari: $('#drmoshtari :selected').val(),
+            StartDate: $('#from').val(),
+            EndDate: $('#to').val(),
+            Type: $('#drtype :selected').val(),
+            Company: $('#drcompany :selected').val()
+        };
+        AjaxData({
+            url: 'amar.asmx/MojoodiBoreshKhorde',
+            param: { e: obj },
+            func: gozaresh
+        });
+
+        function gozaresh(e) {
+            $('#footer').empty();
+            var d = JSON.parse(e.d);
+            var body = [];
+            for (var i = 0; i < d.length; i++) {
+                body.push('<table class="mojoodi-table" style="width:15%;">' +
+                    '<tr>' +
+                    '<th colspan="2" style="font-weight:800;width:15%;">' + d[i].Gol + '</th>' +
+                    '</tr>');
+                for (var j = 0; j < d[i].Itemses.length; j++) {
+                    if (parseInt(d[i].Itemses[j].Tedad) > 0) {
+                        body.push('<tr>' +
+                            '<td style="padding:1px;">' + d[i].Itemses[j].Tedad + '</td>' +
+                            '<td style="padding:1px;">' + d[i].Itemses[j].Item + '</td>' +
+                            '</tr>')    
+                    }
+                }
+                body.push('</table>');
+            }
+            $('#footer').append(body.join(''));
+            $('.loading').hide();
+            $('#footer').find('table').each(function(index , element) {
+                if ($(element).find('tr').length === 1) {
+                    $(element).remove();
+                }
+            });
+        }
+    }
+</script>

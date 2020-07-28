@@ -1,0 +1,269 @@
+﻿<div id="depo-contents">
+    <script src="../../bastebandi/Scripts/notify.min.js"></script>
+    <script>
+        function AjaxData(obj) {
+            $.ajax({
+                type: 'POST',
+                url: '../bastebandi/' + obj.url,
+                data: JSON.stringify(obj.param),
+                contentType: 'application/json;',
+                dataType: 'json',
+                success: obj.func,
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+
+        function ElementRedalert(ele, pos, txt) {
+            var element;
+            if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+            $(element).notify(txt, { position: pos, className: "error" });
+        }
+
+        function FilterTable() {
+            if ($('#itemsearch').val() == "" && $('#golsearch').val() == "") {
+                ElementRedalert('btnSearch', 'top center', 'لطفا آیتم یا طرح را مشخص کنید')
+                return;
+            }
+            AjaxData({
+                url: 'depoitems.asmx/SearchInDepoItem',
+                param: {
+                    item: $('#itemsearch').val(),
+                    gol: $('#golsearch').val(),
+                    rang: $('#rangsearch :selected').val(),
+                    darage: $('#daragesearch :selected').val(),
+                    format: $('#formatsearch :selected').val(),
+                    type: $('#typesearch :selected').val(),
+                    moshtari : -1
+                },
+                func: filterDepoItems
+            });
+
+            function filterDepoItems(e) {
+                var d = JSON.parse(e.d);
+                if (!d.length) return;
+                $('#tblItems').empty();
+                var b = [];
+                b.push('<tr><th>نام آیتم</th><th>نام طرح</th><th>چیدمان</th><th>درجه</th>' +
+                    '<th>تعداد</th><th>سبد</th><th>قفسه</th></tr>');
+                for (var i = 0; i < d.length; i++) {
+                    b.push('<tr>' +
+                        '<td itemid="' + d[i].ItemId + '" darb="' + d[i].Darb + '">' + d[i].ItemName + '</td>' +
+                        '<td golid="' + d[i].GolId + '">' + d[i].GolName + '</td>' +
+                        '<td arrid="' + d[i].ArrangeId + '">' + d[i].Arrange + '</td>' +
+                        '<td did="' + d[i].DarageId + '">' + d[i].Darage + '</td>' +
+                        '<td style="position:relative;">' + d[i].Tedad + '</td>' +
+                        '<td>' + d[i].Basket + '</td>' +
+                        '<td>' + d[i].Shelf + '</td>' +
+                        '</tr>');
+                }
+                $('#tblItems ').append(b.join(''));
+            }
+        };
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        .col-sm-4 {
+            position: relative;
+        }
+
+        #Panel1 {
+            width: 99% !important;
+        }
+
+        label {
+            font-size: 18pt;
+            font-weight: 800;
+        }
+
+        .stable {
+            width: 100%;
+        }
+
+            .stable tr {
+                border-bottom: 1px solid #c9c9c9;
+                cursor: pointer;
+            }
+
+                .stable tr td {
+                    background: #edf8fb;
+                    color: black;
+                    padding: 1px 2px;
+                    font-size: 16pt;
+                    font-weight: 800;
+                    padding-right: 20px;
+                }
+
+                    .stable tr td:hover {
+                        color: white;
+                        background-color: darkblue;
+                    }
+
+        table tr td {
+            font-size: 17pt;
+            font-weight: 800;
+        }
+
+        table tr th {
+            font-size: 17pt;
+            font-weight: 800;
+        }
+
+        table tr td a {
+            cursor: pointer;
+        }
+
+        .searcharea {
+            margin: 0;
+            border: 1px solid rgb(190, 190, 190);
+            border-radius: 5px;
+            background-color: #dfecfe;
+            margin-top: 5px;
+            direction: rtl;
+        }
+
+            .searcharea input, select {
+                width: 100% !important;
+            }
+
+        .brdr {
+            border: 1px solid darkgray;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .lbl {
+            display: block;
+            text-align: right;
+            margin: 0;
+        }
+
+        .panel-heading {
+            font-size: 18pt;
+        }
+
+        input[type="checkbox"][id=darb] {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+
+    <div class="panel panel-primary" style="position: relative;">
+        <div class="panel-heading">دپوی بسته بندی</div>
+        <div class="panel-footer" id="tblarea" style="position: relative;">
+            <div class="row searcharea">
+                <div class="col-sm-1" style="padding: 5px;">
+                    <label class="lbl">&nbsp;</label>
+                    <button class="button" type="button" id="btnSearch" onclick="FilterTable();">جستجو</button>
+                </div>
+                <div class="col-sm-1" style="padding: 5px;">
+                    <label class="lbl">نوع</label>
+                    <select class="form-control" id="typesearch">
+                        <option value="-1">انتخاب کنید</option>
+                        <option value="1">مایکرویو</option>
+                        <option value="2">معمولی</option>
+                    </select>
+                </div>
+                <div class="col-sm-2" style="padding: 5px;">
+                    <label class="lbl">درجه</label>
+                    <select class="form-control" id="daragesearch">
+                        <option value="-1">انتخاب کنید</option>
+                    </select>
+                </div>
+                <div class="col-sm-2" style="padding: 5px;">
+                    <label class="lbl">قالب</label>
+                    <select class="form-control" id="formatsearch">
+                        <option value="-1">انتخاب کنید</option>
+                    </select>
+                </div>
+                <div class="col-sm-2" style="padding: 5px;">
+                    <label class="lbl">رنگ</label>
+                    <select class="form-control" id="rangsearch">
+                        <option value="-1">انتخاب کنید</option>
+                    </select>
+                </div>
+                <div class="col-sm-2" style="padding: 5px;">
+                    <label class="lbl">طرح</label>
+                    <input type="text" tabindex="11" placeholder="جستجو ..." id="golsearch" class="form-control" />
+                </div>
+                <div class="col-sm-2" style="padding: 5px;">
+                    <label class="lbl">آیتم</label>
+                    <input type="text" tabindex="10" placeholder="جستجو ..." id="itemsearch" class="form-control" />
+                </div>
+            </div>
+            <table class="table table-bordered" id="tblItems" style="position: relative;"></table>
+        </div>
+    </div>
+
+
+    <script>
+        $('#txtsearchItem').focus();
+        GetItemTable();
+        GetControls();
+        function GetControls() {
+            AjaxData({
+                url: 'depoitems.asmx/GetControlsData',
+                param: {},
+                func: fillControls
+            });
+
+            function fillControls(e) {
+                var op = JSON.parse(e.d);
+                for (var i = 0; i < op.DarageList.length; i++) {
+                    $('#daragesearch').append("<option value=" + op.DarageList[i].Id + ">" + op.DarageList[i].Name + "</option>");
+                }
+                for (var i = 0; i < op.RangList.length; i++) {
+                    $('#rangsearch').append("<option value=" + op.RangList[i].Id + ">" + op.RangList[i].Name + "</option>");
+                }
+                for (var i = 0; i < op.FormatList.length; i++) {
+                    $('#formatsearch').append("<option value=" + op.FormatList[i].Id + ">" + op.FormatList[i].Name + "</option>");
+                }
+            }
+        }
+        function GetItemTable() {
+            $('#tblItems').empty();
+            AjaxData({
+                url: 'depoitems.asmx/GetDepoItems',
+                param: {},
+                func: createItemsTable
+            });
+            function createItemsTable(e) {
+                var d = JSON.parse(e.d);
+                if (d.length > 0) {
+                    var b = [];
+                    b.push('<tr><th>نام آیتم</th><th>نام طرح</th><th>چیدمان</th><th>درجه</th>' +
+                        '<th>تعداد</th><th>سبد</th><th>قفسه</th></tr>');
+                    for (var i = 0; i < d.length; i++) {
+                        b.push('<tr>' +
+                            '<td itemid="' + d[i].ItemId + '" darb="' + d[i].Darb + '">' + d[i].ItemName + '</td>' +
+                            '<td golid="' + d[i].GolId + '">' + d[i].GolName + '</td>' +
+                            '<td arrid="' + d[i].ArrangeId + '">' + d[i].Arrange + '</td>' +
+                            '<td did="' + d[i].DarageId + '">' + d[i].Darage + '</td>' +
+                            '<td style="position:relative;">' + d[i].Tedad + '</td>' +
+                            '<td>' + d[i].Basket + '</td>' +
+                            '<td>' + d[i].Shelf + '</td>' +
+                            '</tr>');
+                    }
+                    $('#tblItems ').append(b.join(''));
+                }
+            }
+        }
+
+    </script>
+</div>

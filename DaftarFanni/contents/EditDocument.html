@@ -1,0 +1,204 @@
+﻿<div class="modal fade yekan" id="EditModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center d-block">
+                ویرایش سند
+            </div>
+            <div class="modal-body" id="editInputs">
+                <div class="row">
+                    <div class="col-md-4 text-right">
+                        <span>شماره صفحه</span>
+                        <input class="form-control text-center" required tabindex="3"  type="number" readonly name="txtPageNumber" tabindex="3" />
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <span>بخش ها</span>
+                        <select class="form-control rtl" required tabindex="2" id="drUnitsEdit"></select>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <span>ماشین آلات</span>
+                        <select class="form-control rtl" tabindex="1" id="drMachinesEdit" onchange="FilterPartsByMachine('drMachinesEdit', 'drUnitsEdit')"></select>
+                    </div>
+                </div>
+                <div class="row mt-3 text-right">
+                    <div class="col-md-4">
+                        <span>توضیحات</span>
+                        <input class="form-control rtl" name="txtComment" tabindex="6" />
+                    </div>
+                    <div class="col-md-4">
+                        <span>کلمات کلیدی</span>
+                        <span class="font-smaller float-left rtl badge badge-danger mt-1 font-weight-light">با دکمه Enter واژه ها را جدا کنید</span>
+                        <input name="txtKeywords" class="text-left" tabindex="5" />
+                    </div>
+                    <div class="col-md-4">
+                        <span>موضوع</span>
+                        <input class="form-control rtl" tabindex="4"  name="txtSubject" tabindex="4" />
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div>
+                            <span class="font-smaller rtl badge badge-danger font-weight-light">
+                                اگر در حال ثبت فهرست هستید این گزینه را فعال کنید
+                            </span>
+                        </div>
+                        <span class="font-small">فهرست</span>
+                        <input type="checkbox" tabindex="8" class="align-middle" name="chFehrest" />
+                    </div>
+                    <div class="col-md-4">
+                        <input type="file" name="file" class="mt-1" tabindex="7" />
+                        <p class="yekan-small mb-0 rtl" name="FileSize"></p>
+                    </div>
+                </div>
+                <div class="row" name="progressbar" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="progress-bar progress-bar-success prgs" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: left !important;justify-content: inherit!important">
+                <button class="btn btn-success" type="button" tabindex="9" name="btnEdit">ویرایش</button>
+                <button class="btn btn-primary" type="button" tabindex="10"
+                        onclick="$('#EditModal').modal('hide'); setTimeout(() => { $('#EditArea').empty()},400)">
+                    انصراف
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var btnEdit = $('[name=btnEdit]');
+    var drMachinesEdit = $('#drMachinesEdit')
+    var drUnitsEdit = $('#drUnitsEdit')
+    var txtSubjectEdit = $('[name=txtSubject]')
+    var txtKeywordsEdit = $('[name=txtKeywords]')
+    var txtCommentEdit = $('[name=txtComment]')
+    var txtPageNumberEdit = $('[name=txtPageNumber]')
+    var fileInputEdit = $('[name=file]')
+    var chFehrestEdit = $('[name=chFehrest]')
+    var FileSizeEdit = $('[name=FileSize]')
+    var ProgressBarEdit = $('[name=progressbar]')
+    var Prgs = $('.prgs');
+    var DocumentId = 0;
+    var GelAllMachines = (documentId) => {
+        DocumentId = documentId;
+        AjaxData({
+            url: 'DaftarFanni.asmx/GetMachines',
+            param: {},
+            func: (e) => {
+                const data = JSON.parse(e.d);
+                const options = data.map(x => '<option value="' + x.Id + '">' + x.MachineName + '</option>');
+                drMachinesEdit.append('<option value="-1">انتخاب کنید</option>').append(options.join(''));
+                GetDocumentById(documentId);
+            }
+        })
+    }
+
+    var GetDocumentById = (documentId) => {
+        AjaxData({
+            url: 'DaftarFanni.asmx/GetDocumentById',
+            param: { documentId: documentId },
+            func: (e) => {
+                var d = JSON.parse(e.d);
+                drMachinesEdit.val(d.MachineId)
+                FilterPartsByMachine('drMachinesEdit', 'drUnitsEdit', () => {
+                    drUnitsEdit.val(d.PartId);
+                });
+                txtPageNumberEdit.val(d.PageNumber);
+                txtSubjectEdit.val(d.Subject)
+                txtKeywordsEdit.val(d.Keywords)
+                txtKeywordsEdit.selectize({
+                    placeholder: '',
+                    persist: false,
+                    createOnBlur: true,
+                    create: true
+                });
+                txtCommentEdit.val(d.Comment);
+                chFehrestEdit.prop("checked", d.Fehrest);
+                FileSizeEdit.text(bytesToSize(d.FileSize))
+                console.log(d);
+                drUnitsEdit.on('change', function () {
+                    if (drUnitsEdit.val() == d.PartId && drMachinesEdit.val() == d.MachineId) {
+                        txtPageNumberEdit.val(d.PageNumber)
+                    } else {
+                        GetPageNumber()
+                    }
+                })
+            }
+        })
+    }
+
+    var GetPageNumber = () => {
+        AjaxData({
+            url: 'DaftarFanni.asmx/GetLatestPageNumber',
+            param: { machineId: drMachinesEdit.val(), partId: drUnitsEdit.val() },
+            func: (e) => {
+                txtPageNumberEdit.val(e.d)
+            }
+        })
+    }
+
+    btnEdit.on('click', () => {
+        if (Checkinputs('editInputs')) {
+            RedAlert('n', 'لطفا فیلدهای خالی را تکمیل کنید')
+        } else {
+            const form = new FormData();
+            const obj = {
+                Id: DocumentId,
+                FileSize: fileInputEdit[0].files.length ? fileInputEdit[0].files[0].size : null,
+                MachineId: drMachinesEdit.val(),
+                PartId: drUnitsEdit.val(),
+                PageNumber: txtPageNumberEdit.val(),
+                Subject: txtSubjectEdit.val(),
+                Keywords: txtKeywordsEdit.val(),
+                Comment: txtCommentEdit.val(),
+                Fehrest: chFehrestEdit.is(':checked')
+            }
+            form.append('file', fileInputEdit.prop('files')[0]);
+            form.append('data', JSON.stringify(obj));
+            doEditUpload(form);
+        }
+    })
+
+    function doEditUpload(formdata) {
+        ProgressBarEdit.show()
+        $.ajax({
+            type: "POST",
+            url: "DaftarFanni.asmx/EditDocument",
+            xhr: function () {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        percentComplete = parseInt(percentComplete * 100);
+                        Prgs.text(percentComplete + '%');
+                        Prgs.css('width', percentComplete + '%');
+                    }
+                }, false);
+                return xhr;
+            },
+            success: function (e) {
+                ProgressBarEdit.hide();
+                const data = JSON.parse($(e)[0].all[0].innerHTML);
+                if (data.duplicate) {
+                    RedAlert('n', data.message);
+                } else {
+                    $('#EditModal').modal('hide');
+                    setTimeout(() => { $('#EditArea').empty() }, 400)
+                    GreenAlert('n', data.message);
+                    SearchDocumnets();
+                }
+            },
+            error: function (error) {
+                console.log('n', error)
+            },
+            async: true,
+            data: formdata,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    };
+</script>

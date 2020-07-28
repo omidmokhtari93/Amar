@@ -1,0 +1,114 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="bastebandi_MasterPage" %>
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <script src="../bastebandi/Scripts/jquery-3.2.1.min.js"></script>
+    <script src="../bastebandi/Scripts/checkorder.js"></script>
+    <link href="../bastebandi/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="../bastebandi/Scripts/bootstrap.js"></script>
+    <script src="../bastebandi/Scripts/notify.min.js"></script>
+    <link href="../bastebandi/Scripts/styles.css" rel="stylesheet" />
+    <link href="../bastebandi/Scripts/modal.css" rel="stylesheet" />
+    <link href="../Images/favicon.ico" rel="shortcut icon"/>
+    <title> سامانه ثبت آمار و برنامه ریزی </title>
+</head>
+<body style="background-image: url(Images/logo1.jpg);">
+    <form id="form1" class="form-inline" runat="server">
+    <div>
+        <div style="text-align: center !important;">
+        <nav>
+            <ul>
+                <li><a><asp:Button CssClass="NavTextstyle" Text="خروج"  runat="server" ID="btn_exit" OnClick="btn_exit_OnClick"/></a></li>            
+                <li><a runat="server" id="btndepo" href="depo.aspx">دپوی بسته بندی</a></li>
+                <li><a>گزارشات</a>
+                    <ul>
+                        <%--<li><a href="Report.aspx">گزارش آیتم ها</a></li>--%>
+                        <li><a href="AnbarGol.aspx">انبار گل</a></li>
+                    </ul>
+                </li>
+                <%--<li><a>جستجو</a></li>--%>
+                <li><a runat="server" id="btnSabt">ثبت</a>
+                    <ul>
+                        <li><a href="order.aspx">سفارش</a></li>
+                        <li><a href="item.aspx">آیتم</a></li>
+                        <li><a href="gol.aspx">گل</a></li>
+                        <li><a href="service.aspx">سرویس</a></li>
+                        <li><a href="moshtari.aspx">مشتری</a></li>
+                        <li><a href="carton.aspx" id="btnCarton">کارتن</a></li>
+                        <li><a href="moadel.aspx" id="btnMoadel">معادل سازی</a></li>
+                        <li><a href="EditService.aspx">کمتراز 30 پارچه</a></li>
+                    </ul> 
+                </li>
+                <li><a runat="server" href="od.aspx" id="btnhavale">حواله خروج</a></li>
+                <li><a runat="server" href="mojoodibastebandi.aspx" id="btnOrders">سفارشات</a></li>
+            </ul>
+        </nav>
+    <asp:Panel Width="80%" class="panel panel-default"  ID="Panel1" runat="server" style="margin: auto;">
+    <div class="panelshadow">
+    <div class="panel-body" id="main_panel" style="background-color: #eaf4fa;">
+        <asp:ContentPlaceHolder ClientIDMode="Static" id="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+    </div>
+    </div>
+    </asp:Panel>
+        </div>
+    </div>
+        <asp:HiddenField id="uid" runat="server" ClientIDMode="Static"></asp:HiddenField>
+        <script>
+            function RedAlert(ele, txt) {
+                var element;
+                if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+                $(element).addClass('form-controlError');
+                setTimeout(function () { $(element).removeClass("form-controlError"); }, 4000);
+                $.notify(txt, { globalPosition: 'top left' });
+            }
+
+            function GreenAlert(ele, txt) {
+                var element;
+                if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+                $(element).css('background-color', 'lightgreen');
+                setTimeout(function () { $(element).removeAttr('style'); }, 4000);
+                $.notify(txt, { className: 'success', clickToHide: false, autoHide: true, position: 'top left' });
+            }
+
+            function ClearFields(div) {
+                $('#' + div).find('input:text').val('');
+                $('#' + div).find('textarea').val('');
+                $('#' + div).find('input').val('');
+                $('#' + div).find("select").prop('selectedIndex', 0);
+                $('#' + div).find("input[type=checkbox]").prop('checked', false);
+            }
+
+            function Notif() {
+                $.notify.addStyle('foo',
+                    {
+                        html:
+                            "<div><div class='clearfix'><div class='title' data-notify-html='title'/><div class='buttons'>" +
+                                "<button class='yes'>نمایش سفارش</button>" +
+                                "<button class='no' data-notify-text='button'></button></div></div></div>"
+                    });
+                $(document).on('click',
+                    '.notifyjs-foo-base .no',
+                    function() {
+                        $(this).trigger('notify-hide');
+                    });
+                $(document).on('click',
+                    '.notifyjs-foo-base .yes',
+                    function() {
+                        window.location = "order.aspx";
+                        $(this).trigger('notify-hide');
+                    });
+                $.notify({
+                        title: 'سفارش جدید در سیستم ثبت شده است',
+                        button: 'بستن پنجره'
+                    },
+                    { style: 'foo', autoHide: false, clickToHide: false, position: 'bottom right' });
+            }
+
+            //$('li > ul > li > a ,.button , table tr a').on("click", function () {
+            //    $("body").addClass("loading");
+            //});
+        </script>
+        <div class="loadingmodal"></div>
+    </form>
+</body>
+</html>

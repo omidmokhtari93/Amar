@@ -1,0 +1,40 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="main.master.cs" Inherits="DaftarFanni_main" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="../bastebandi/Scripts/notify.min.js"></script>
+    <script src="js/scripts.js"></script>
+</head>
+<body>
+    <form id="form1" runat="server" class="yekan">
+        <div class="bg-primary text-center yekan header">
+            <label class="text-white mb-0 h4" style="font-weight: 800; margin-left: 19%;">دفتر فنی</label>
+            <ul class="top-menu">
+                <li><a href="Sabt.aspx">ثبت سند جدید</a></li>
+                <li><a href="Search.aspx">جستجوی سند</a></li>
+                <li><a href="Machines.aspx">ماشین آلات</a></li>
+                <li><a href="Units.aspx">بخش ها</a></li>
+                <li><button class="bg-transparent border-0 text-white font-weight-bold p-0" runat="server"
+                            OnServerClick="OnServerClick" href="Units.aspx">خروج</button>
+                </li>
+            </ul>
+        </div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        <div class="footer bg-primary">
+            <span class="yekan-small float-right text-white">شرکت صنایع چینی تقدیس</span>
+            <span class="yekan-small float-left text-white">تهیه شده توسط واحد نرم افزار</span>
+        </div>
+    </form>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/mdb.min.js"></script>
+</body>
+</html>
