@@ -284,6 +284,7 @@
                 <nav>
                     <ul>
                         <li><a><asp:Button CssClass="textstyle" Text="خروج" runat="server" ID="btn_exit" OnClick="btn_exit_OnClick"/></a></li>  
+                        <li><a><asp:Button CssClass="textstyle" Text="پشتیبان گیری" runat="server" ID="btn_backup" OnClick="btn_backup_OnClick"/></a></li>  
                         <li><a><asp:Button runat="server" ID="btn_edit_controls" CssClass="textstyle" Text="ویرایش کنترل ها" OnClick="btn_edit_controls_OnClick"></asp:Button></a>          
                         <li><a><asp:Button runat="server" CssClass="textstyle" Text="گزارشات" ID="btn_report" OnClick="btn_report_OnClick"></asp:Button></a></li>
                         <li><a><asp:Button ID="btn_search_flower" CssClass="textstyle" runat="server"  Text="جستجوی گل" OnClick="btn_search_flower_OnClick" /></a></li>

@@ -66,4 +66,9 @@ public partial class flower_report : System.Web.UI.MasterPage
     {
         Response.Redirect("moadel.aspx");
     }
+
+    protected void btn_backup_OnClick(object sender, EventArgs e)
+    {
+        Response.Redirect("backup.aspx");
+    }
 }
