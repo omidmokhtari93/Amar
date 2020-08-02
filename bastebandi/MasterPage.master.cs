@@ -20,11 +20,13 @@ public partial class bastebandi_MasterPage : System.Web.UI.MasterPage
                 btnSabt.Visible = false;
                 btnhavale.Visible = false;
                 btnOrders.Visible = false;
+                btnbackup.Visible = false;
                 return;
             case 47:
                 btnhavale.Visible = false;
                 btndepo.Visible = false;
                 btnOrders.Visible = false;
+                btnbackup.Visible = false;
                 return;
             case 34:
                 return;

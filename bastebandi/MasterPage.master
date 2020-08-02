@@ -19,6 +19,7 @@
         <nav>
             <ul>
                 <li><a><asp:Button CssClass="NavTextstyle" Text="خروج"  runat="server" ID="btn_exit" OnClick="btn_exit_OnClick"/></a></li>            
+                <li><a runat="server" id="btnbackup" href="backup.aspx">پشتیبان گیری</a></li>
                 <li><a runat="server" id="btndepo" href="depo.aspx">دپوی بسته بندی</a></li>
                 <li><a>گزارشات</a>
                     <ul>

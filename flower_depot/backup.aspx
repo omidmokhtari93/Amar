@@ -45,9 +45,11 @@
     <div id="backupsarea" style="margin-bottom: 10px"></div>
     <div id="tablearea" style="display: inline-block"></div>
     <script>
+        const key = 'AjEQh@32';
         const checkTodaysBackup = e => {
             AjaxData({
                 url: 'backup.asmx/CheckTodayBackups',
+                param: { key: key },
                 func: (e) => {
                     if (!e.d) {
                         $('#buttonarea').empty().append('<button type="button" id="btnbackup" class="btn btn-primary">پشتیبان گیری</button>')
@@ -63,6 +65,7 @@
         const getLastBackups = e => {
             AjaxData({
                 url: 'backup.asmx/CheckLastBackups',
+                param: { key: key },
                 func: (e) => {
                     const json = JSON.parse(e.d);
                     if (!json.length) return;
@@ -87,6 +90,7 @@
         const addBackup = e => {
             AjaxData({
                 url: 'backup.asmx/CreateBackup',
+                param: { key: key },
                 func: (e) => {
                     let m = JSON.parse(e.d);
                     if (m.type == "success") {
