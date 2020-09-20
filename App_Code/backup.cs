@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Statements;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -18,7 +19,7 @@ using System.Web.Services;
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 [System.Web.Script.Services.ScriptService]
-public class backup : System.Web.Services.WebService
+public class backup : WebService
 {
     private readonly SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["flower_depot"].ConnectionString);
     public Key k = new Key();
@@ -32,16 +33,9 @@ public class backup : System.Web.Services.WebService
         }
 
         var d = new DirectoryInfo(Server.MapPath(k.GetPath(key)));
-        var Files = d.GetFiles().OrderByDescending(p => p.CreationTime).ToArray();
+        var Files = d.GetFiles().OrderBy(p => p.CreationTime).ToArray();
         var fileName = k.GetFileName(key);
-        foreach (var file in Files)
-        {
-            if (file.Name == fileName)
-            {
-                return file.Name;
-            }
-        }
-        return null;
+        return (from file in Files where file.Name == fileName select file.Name).FirstOrDefault();
     }
 
     [WebMethod]
@@ -58,11 +52,11 @@ public class backup : System.Web.Services.WebService
         }
         con.Open();
         var path = Server.MapPath(k.GetPath(key));
-        var fileName = k.GetFileName(key);
-        path = path.Replace("\\", "/") + "/" + fileName;
+        path = path.Replace("\\", "/") + "/" + k.GetFileName(key);
         var cmd = new SqlCommand("BACKUP DATABASE " + k.GetDb(key) + " TO DISK = '" + path + "'", con);
         cmd.ExecuteNonQuery();
         con.Close();
+        RemoveOldBackups(key);
         return new JavaScriptSerializer().Serialize(new { message = "پشتیبان گیری با موفقیت انجام شد", type = "success" });
     }
 
@@ -74,20 +68,23 @@ public class backup : System.Web.Services.WebService
         {
             return k.Message;
         }
-        var list = new List<BackupData>();
+
         var d = new DirectoryInfo(Server.MapPath(k.GetPath(key)));
-        var Files = d.GetFiles().OrderByDescending(p => p.CreationTime).ToArray();
-        for (var j = 0; j < Files.Length && j < 10; j++)
-        {
-            list.Add(new BackupData()
-            {
-                Name = Files[j].Name,
-                Size = Files[j].Length
-            });
-        }
+        var list = d.GetFiles().OrderByDescending(p => p.CreationTime).ToArray()
+            .Select(t => new BackupData() { Name = t.Name, Size = t.Length }).ToList();
         return new JavaScriptSerializer().Serialize(list);
     }
 
+    private void RemoveOldBackups(string key)
+    {
+        var files = new DirectoryInfo(Server.MapPath(k.GetPath(key)))
+            .GetFiles("*").OrderByDescending(x => x.CreationTime).ToArray();
+        if (files.Length < 5) return;
+        for (var i = 5; i < files.Length; i++)
+        {
+            File.Delete(files[i].FullName);
+        }
+    }
 
     public class Key
     {
@@ -115,9 +112,9 @@ public class backup : System.Web.Services.WebService
             switch (key)
             {
                 case "B2Kj32sO85":
-                    return "/bastebandi/backups";
+                    return "../bastebandi/backups";
                 case "AjEQh@32":
-                    return "/flower_depot/backups";
+                    return "../flower_depot/backups";
                 default:
                     return Message;
             }
@@ -141,50 +138,5 @@ public class backup : System.Web.Services.WebService
     {
         public string Name { get; set; }
         public long Size { get; set; }
-    }
-
-    public void taskScheduler()
-    {
-        TaskScheduler.Instance.ScheduleTask(15, 2, 24,
-            () => { });
-    }
-
-    public class TaskScheduler
-    {
-        private static TaskScheduler _instance;
-        private List<Timer> timers = new List<Timer>();
-
-        private TaskScheduler() { }
-
-        public static TaskScheduler Instance
-        {
-            get
-            {
-                return _instance ?? (_instance = new TaskScheduler());
-            }
-        }
-
-        public void ScheduleTask(int hour, int min, double intervalInHour, Action task)
-        {
-            var now = DateTime.Now;
-            var firstRun = new DateTime(now.Year, now.Month, now.Day, hour, min, 0, 0);
-            if (now > firstRun)
-            {
-                firstRun = firstRun.AddDays(1);
-            }
-
-            var timeToGo = firstRun - now;
-            if (timeToGo <= TimeSpan.Zero)
-            {
-                timeToGo = TimeSpan.Zero;
-            }
-
-            var timer = new Timer(x =>
-            {
-                task.Invoke();
-            }, null, timeToGo, TimeSpan.FromHours(intervalInHour));
-
-            timers.Add(timer);
-        }
     }
 }

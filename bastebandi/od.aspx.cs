@@ -20,7 +20,9 @@ public partial class bastebandi_orderDetTEST : System.Web.UI.Page
             GetTimeDate();
         }
 
-        if (Session["username"].ToString() == "ali")
+        if (Session["username"] != null
+            && (string) Session["username"] != ""
+            && Session["username"].ToString() == "ali")
         {
             Sqlhavaleh.SelectCommand = "SELECT ID ,replace(sh, '/', '')as shomare,replace(sh, ' ', '')as sh, left (dat,4)+ '/' " +
                                        "+ SUBSTRING(dat ,5,2) + '/' + right(dat,2) as dat" +

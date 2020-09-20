@@ -52,7 +52,7 @@
                 param: {key : key},
                 func: (e) => {
                     if (!e.d) {
-                        $('#buttonarea').empty().append('<button type="button" id="btnbackup" class="btn btn-primary">پشتیبان گیری</button>')
+                        $('#buttonarea').empty().append('<button type="button" id="btnbackupBastebandi" class="btn btn-primary">پشتیبان گیری</button>')
                     } else {
                         $('#buttonarea').empty().append('<h4>پشتیبان گیری امروز انجام شده است</h4>' +
                             '<a download="' + e.d + '" class="btn btn-sm btn-success" href="backups/' + e.d + '">دریافت آخرین فایل پشتیبان</a>')
@@ -103,7 +103,8 @@
             })
         }
 
-        $(document).on('click', '#btnbackup', () => {
+        $(document).on('click', '#btnbackupBastebandi', (e) => {
+            console.log(e);
             addBackup();
             $('#buttonarea').empty().append('<div class="loader"></div>')
         })

@@ -9,7 +9,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        Session.Timeout = 40;
     }
     protected void btn_exit_OnClick(object sender, EventArgs e)
     {

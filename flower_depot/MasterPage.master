@@ -4,279 +4,399 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="stylesheet" href="Content/bootstrap.min.css"/>
-<link rel="stylesheet" href="Content/bootstrap.css"/>
-<link rel="stylesheet" href="Content/imageTransiotion.css"/>
-<link href="Content/font-awesome.min.css" rel="stylesheet" />
-<link href="Content/font-awesome.css" rel="stylesheet" />
-<script src="Scripts/jquery-3.2.1.min.js"></script>
-<script src="Scripts/bootstrap.js"></script>
-<script src="Scripts/bootstrap.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="Content/bootstrap.css" />
+    <link rel="stylesheet" href="Content/imageTransiotion.css" />
+    <link href="Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="Content/font-awesome.css" rel="stylesheet" />
+    <script src="Scripts/jquery-3.2.1.min.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
     <script>
         function CopyMe(oFileInput, sTargetId) {
             document.getElementById(sTargetId).value = oFileInput.value;
         }
     </script>
-    <title> سامانه ثبت آمار و برنامه ریزی </title>
-<style>
-    @font-face {
-        font-family: 'myfont';
-        src: url('fonts/Far_Nazanin.eot'),
-             url('fonts/glyphicons-halflings-regular.eot')format('embedded-opentype'),
-             url('fonts/Far_Nazanin.eot?#FooAnything') format('embedded-opentype');
-        src: local('☺'),
-             url('fonts/Far_Nazanin.woff') format('woff'),
-             url('fonts/Far_Nazanin.ttf') format('truetype'),
-             url('fonts/Far_Nazanin.svg') format('svg'),
-             url('fonts/glyphicons-halflings-regular.woff') format('woff'),
-             url('fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-             url('fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg'),
-             url('fonts/glyphicons-halflings-regular.woff2')format('woff2');
-             font-weight : 400;
-    }
-    nav {
-        font-family: 'myFont';
-        font-size: 14pt;
-    }
-    .rbl input[type="radio"] {
-        vertical-align: middle;
-        margin-left: 6px;
-        margin-right: 15px;
-        width: 20px;
-        height: 20px;
-    }
-    div { font-family: 'myFont' }
-    .panelforflowerinfo {
-        border: 2px solid rgb(149, 149, 149);
-        border-radius: 5px;
-        position: relative;
-        display: inline-block !important;
-        width: 100%;
-        margin-bottom: -5px;
-        padding: 5px;
-    }
-    .text {
-        font-size: 12pt;
-        background-color: #338aff;
-        color: #ffffff;
-        padding: 0px 5px;
-        border-radius: 10px;
-    }
-   .formsBadge {
-       border: none;
-       color: white;
-       cursor: pointer;
-       vertical-align: 1px;
-       margin-left: 5px;
-   }
-   .textofbadge { vertical-align: 2px }
-   .input-group-addon {
-       cursor: pointer;
-       height: 40px;
-   }
-    .input-group {
-        height: 40px;
-    }
-    .inline {
-        font-size: 14pt;
-        display: inline-block;
-    }
-    .btn_add_form_to_badge {
-        background-color: #5cb75c; /* Green */
-        border: none;
-        color: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        padding-top: 2px;
-    }
-     .textstyle {
-        background-color: Transparent;
-        background-repeat:no-repeat;
-        border: none;
-        cursor:pointer;
-        overflow: hidden;
-        outline:none;
-    }
-    .img-thumbnail {
-        height: 200px;
-        width: 200px;
-    }
-    .welcome {
-        font-size: 25pt;
-        margin: 10px;
-        width: 100%;
-    }
-  
-    .delete_all_warning {
-        border: 2px solid red;
-        border-radius: 5px;
-        width: 30%;
-        position: relative;
-        display: inline-block !important;
-        margin: 10px;
-        padding: 5px;
-    }
-    .delete_order_warning {
-        border: 2px solid red;
-        border-radius: 5px;
-        position: relative;
-        display: inline-block !important;
-        padding: 5px;
-    }
-    .label-success {
-        font-size: 11pt;
-    }
-    .Flower_panel {
-        margin-top: 24px;
-    }
-    .panelwarning_orders {
-        width: 100%;
-        display: inline-block !important;
-        margin-right: 50px;
-        position: center;
-    }
-    .panelwarning {
-        width: 100%;
-        position: relative;
-        display: inline-block !important;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    .panel-block {
-        margin: 10px;
-        width: 100%;
-        display: inline-block;
-        position: center;
-         }
-    .panelshadow {
-         box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
-        border-radius: 10px;
-    }
-    .myuploadbtn {
-        background-color: #4CAF50;
-        border: none;
-        padding: 5px 10px;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    .glyphicon-warning-sign {
-        color: red;
-        vertical-align: -4px;
-        margin: 3px;
-    }
-    
-    .table th {text-align: center !important; background-color: #65dbff; }
-    .table { direction: rtl;  font-size: 12pt; font-weight : 900;text-align: center !important;}
-    .table tr th { padding: 2px 5px !important; }
-    .table td { padding: 2px 5px !important;vertical-align: middle !important; }
-    .table tr:nth-child(even){background-color: #beefff;}
-    .table tr:nth-child(odd){background-color: #eaf4fa;}
-    .table td span {color:red;font-weight:bold;}
+    <title>سامانه ثبت آمار و برنامه ریزی </title>
+    <style>
+        @font-face {
+            font-family: 'myfont';
+            src: url('fonts/Far_Nazanin.eot'), url('fonts/glyphicons-halflings-regular.eot')format('embedded-opentype'), url('fonts/Far_Nazanin.eot?#FooAnything') format('embedded-opentype');
+            src: local('☺'), url('fonts/Far_Nazanin.woff') format('woff'), url('fonts/Far_Nazanin.ttf') format('truetype'), url('fonts/Far_Nazanin.svg') format('svg'), url('fonts/glyphicons-halflings-regular.woff') format('woff'), url('fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg'), url('fonts/glyphicons-halflings-regular.woff2')format('woff2');
+            font-weight: 400;
+        }
 
-    .gridstyle {
-        display: inline-block;
-        position: center;
-        margin-top: 10px;
-    }
-    .pane_edit_flower{  
-        width: 100%;
-        display: inline-block;
-        margin: -8px;
-    }
-    .panel-body { background: #EBF5FB; }
+        nav {
+            font-family: 'myFont';
+            font-size: 14pt;
+        }
 
-    .btn { font-size: 14pt; }
+        .rbl input[type="radio"] {
+            vertical-align: middle;
+            margin-left: 6px;
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
 
-    .header-top {
-        position: relative;
-        z-index: 1000;
-    }
-    .w3-modal {
-        z-index: 1001;
-    }
-    .form-control {
-        font-size: 14pt;
-        height: 40px;
-        font-weight : 900;
-    }
+        div {
+            font-family: 'myFont'
+        }
 
-    .form-group {
-        font-size: 14pt;
-        float: right;
-        margin: 15px;
-    }
+        .panelforflowerinfo {
+            border: 2px solid rgb(149, 149, 149);
+            border-radius: 5px;
+            position: relative;
+            display: inline-block !important;
+            width: 100%;
+            margin-bottom: -5px;
+            padding: 5px;
+        }
 
-    .uploadgroup {
-        width: 100%;
-        display: inline-block !important;
-        position: relative;
+        .text {
+            font-size: 12pt;
+            background-color: #338aff;
+            color: #ffffff;
+            padding: 0px 5px;
+            border-radius: 10px;
+        }
 
-    }
-    .container {
-        font-size: 11pt;
-        width: 100%;
-        position: relative;
-        display: inline-block !important;
-        margin: 5px;
-    }
-    .headerstyle {
-        width: 100%;
-        position: relative;
-        display: inline-block !important;
-        font-size: 15pt;
-        padding: 5px;
-        background-color: #65dbff;
-        border-radius: 10px;
-    }
-    .inner {
-        font-size: 14pt;
-        float: right !important;
-        margin-right: 20px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    .button {
-        font-family: myfont;
-        font-size: 14pt;
-        font-weight : 900;
-        color: #000000;
-        background-color: #d0cfcf;
-        border: none;
-        padding: 5px 15px;
-        text-align: center;
-        display: inline-block;
-        cursor: pointer;
-        border-radius: 4px;
-    }
-    .button:hover {
-        background-color: #0c0184;
-        color: #ffffff;
-    }
-    nav ul ul { display: none;}
-    nav ul li:hover > ul { display: block;}
-    nav ul {  background: #f1f4f7; box-shadow: 0px 0px 5px rgba(0,0,0,1); padding: 0 20px; list-style: none;position: relative;display: inline-table; width: 100%; }
-    nav ul:after { content: ""; clear: both;  display: block;}
-    nav ul li { display: inline-block; position: relative; font-weight: bold;}
-    nav ul li:hover {background: #338AFF;}
-    nav ul li:hover a {text-decoration: none; cursor: pointer; color: #ffffff;}
-    nav ul li a { display: block; padding: 5px 32px;color: #6c6c6c; text-decoration: none;}
-    nav ul ul { background: #338AFF; padding: 0; position: absolute;top: 100%; right: 0; width: 200px;}
-    nav ul ul li { float: none;position: relative;}
-    nav ul ul li a { padding: 5px 40px;color: #ffffff; }	
-    nav ul ul li a:hover { background: #338AFF;color: #000000;}
-    nav ul ul ul {position: absolute;right: 100%;top:0;}
-</style>
-    </head>
-<body bgcolor="ffeeee" style="height: 100%" background = "../flower_depot/Images/logo1.jpg">
+        .formsBadge {
+            border: none;
+            color: white;
+            cursor: pointer;
+            vertical-align: 1px;
+            margin-left: 5px;
+        }
+
+        .textofbadge {
+            vertical-align: 2px
+        }
+
+        .input-group-addon {
+            cursor: pointer;
+            height: 40px;
+        }
+
+        .input-group {
+            height: 40px;
+        }
+
+        .inline {
+            font-size: 14pt;
+            display: inline-block;
+        }
+
+        .btn_add_form_to_badge {
+            background-color: #5cb75c; /* Green */
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            padding-top: 2px;
+        }
+
+        .textstyle {
+            background-color: Transparent;
+            background-repeat: no-repeat;
+            border: none;
+            cursor: pointer;
+            overflow: hidden;
+            outline: none;
+        }
+
+        .img-thumbnail {
+            height: 200px;
+            width: 200px;
+        }
+
+        .welcome {
+            font-size: 25pt;
+            margin: 10px;
+            width: 100%;
+        }
+
+        .delete_all_warning {
+            border: 2px solid red;
+            border-radius: 5px;
+            width: 30%;
+            position: relative;
+            display: inline-block !important;
+            margin: 10px;
+            padding: 5px;
+        }
+
+        .delete_order_warning {
+            border: 2px solid red;
+            border-radius: 5px;
+            position: relative;
+            display: inline-block !important;
+            padding: 5px;
+        }
+
+        .label-success {
+            font-size: 11pt;
+        }
+
+        .Flower_panel {
+            margin-top: 24px;
+        }
+
+        .panelwarning_orders {
+            width: 100%;
+            display: inline-block !important;
+            margin-right: 50px;
+            position: center;
+        }
+
+        .panelwarning {
+            width: 100%;
+            position: relative;
+            display: inline-block !important;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .panel-block {
+            margin: 10px;
+            width: 100%;
+            display: inline-block;
+            position: center;
+        }
+
+        .panelshadow {
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+            border-radius: 10px;
+        }
+
+        .myuploadbtn {
+            background-color: #4CAF50;
+            border: none;
+            padding: 5px 10px;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .glyphicon-warning-sign {
+            color: red;
+            vertical-align: -4px;
+            margin: 3px;
+        }
+
+        .table th {
+            text-align: center !important;
+            background-color: #65dbff;
+        }
+
+        .table {
+            direction: rtl;
+            font-size: 12pt;
+            font-weight: 900;
+            text-align: center !important;
+        }
+
+            .table tr th {
+                padding: 2px 5px !important;
+            }
+
+            .table td {
+                padding: 2px 5px !important;
+                vertical-align: middle !important;
+            }
+
+            .table tr:nth-child(even) {
+                background-color: #beefff;
+            }
+
+            .table tr:nth-child(odd) {
+                background-color: #eaf4fa;
+            }
+
+            .table td span {
+                color: red;
+                font-weight: bold;
+            }
+
+        .gridstyle {
+            display: inline-block;
+            position: center;
+            margin-top: 10px;
+        }
+
+        .pane_edit_flower {
+            width: 100%;
+            display: inline-block;
+            margin: -8px;
+        }
+
+        .panel-body {
+            background: #EBF5FB;
+        }
+
+        .btn {
+            font-size: 14pt;
+        }
+
+        .header-top {
+            position: relative;
+            z-index: 1000;
+        }
+
+        .w3-modal {
+            z-index: 1001;
+        }
+
+        .form-control {
+            font-size: 14pt;
+            height: 40px;
+            font-weight: 900;
+        }
+
+        .form-group {
+            font-size: 14pt;
+            float: right;
+            margin: 15px;
+        }
+
+        .uploadgroup {
+            width: 100%;
+            display: inline-block !important;
+            position: relative;
+        }
+
+        .container {
+            font-size: 11pt;
+            width: 100%;
+            position: relative;
+            display: inline-block !important;
+            margin: 5px;
+        }
+
+        .headerstyle {
+            width: 100%;
+            position: relative;
+            display: inline-block !important;
+            font-size: 15pt;
+            padding: 5px;
+            background-color: #65dbff;
+            border-radius: 10px;
+        }
+
+        .inner {
+            font-size: 14pt;
+            float: right !important;
+            margin-right: 20px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            font-family: myfont;
+            font-size: 14pt;
+            font-weight: 900;
+            color: #000000;
+            background-color: #d0cfcf;
+            border: none;
+            padding: 5px 15px;
+            text-align: center;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            .button:hover {
+                background-color: #0c0184;
+                color: #ffffff;
+            }
+
+        nav ul ul {
+            display: none;
+        }
+
+        nav ul li:hover > ul {
+            display: block;
+        }
+
+        nav ul {
+            background: #f1f4f7;
+            box-shadow: 0px 0px 5px rgba(0,0,0,1);
+            padding: 0 20px;
+            list-style: none;
+            position: relative;
+            display: inline-table;
+            width: 100%;
+        }
+
+            nav ul:after {
+                content: "";
+                clear: both;
+                display: block;
+            }
+
+            nav ul li {
+                display: inline-block;
+                position: relative;
+                font-weight: bold;
+            }
+
+                nav ul li:hover {
+                    background: #338AFF;
+                }
+
+                    nav ul li:hover a {
+                        text-decoration: none;
+                        cursor: pointer;
+                        color: #ffffff;
+                    }
+
+                nav ul li a {
+                    display: block;
+                    padding: 5px 32px;
+                    color: #6c6c6c;
+                    text-decoration: none;
+                }
+
+            nav ul ul {
+                background: #338AFF;
+                padding: 0;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 200px;
+            }
+
+                nav ul ul li {
+                    float: none;
+                    position: relative;
+                }
+
+                    nav ul ul li a {
+                        padding: 5px 40px;
+                        color: #ffffff;
+                    }
+
+                        nav ul ul li a:hover {
+                            background: #338AFF;
+                            color: #000000;
+                        }
+
+                nav ul ul ul {
+                    position: absolute;
+                    right: 100%;
+                    top: 0;
+                }
+    </style>
+</head>
+<body bgcolor="ffeeee" style="height: 100%" background="../flower_depot/Images/logo1.jpg">
     <form id="form1" class="form-inline" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <center>
@@ -309,7 +429,7 @@
             </div></div>
             </asp:Panel>
         </center>
-       
+
     </form>
 </body>
 </html>

@@ -10,7 +10,7 @@
             width: 99% !important;
         }
     </style>
-<div class="headerstyle">
+    <div class="headerstyle">
         <div class="panelwarning" style="padding-left: 15px;">
             <label>.:: انتخاب نوع گزارش ::.</label>
             <asp:Button runat="server" Text="بازگشت به آخرین گل جستجو شده" CssClass="button" OnClick="OnClick" Style="float: left;" />
@@ -18,6 +18,7 @@
         <asp:RadioButtonList ID="rbl_choose_report" RepeatDirection="Horizontal" dir="rtl" CssClass="rbl" runat="server" AutoPostBack="True" OnSelectedIndexChanged="rbl_choose_report_SelectedIndexChanged">
             <asp:ListItem Value="1">تعداد برگ موجود مشتریان به تفکیک ابعاد</asp:ListItem>
             <asp:ListItem Value="2">تعداد برگ موجود بر اساس فیلترها</asp:ListItem>
+            <asp:ListItem Value="10">تعداد برگ با ابعاد</asp:ListItem>
             <asp:ListItem Value="3">مانده هر مشتری از سال 93</asp:ListItem>
             <asp:ListItem Value="4">آیتم های مشتری</asp:ListItem>
             <asp:ListItem Value="5">جستجوی آیتم های مشتری</asp:ListItem>
@@ -43,6 +44,21 @@
 
     <%------------- -----------------%>
 
+
+    <%--------------- جستجوی گل ها------------------%>
+    <asp:Panel runat="server" ID="pnlTedadBargBaDimnesion" Visible="False">
+        <div id="TedadBargBaDimnesion"></div>
+        <script>
+            $(function () {
+                $('#TedadBargBaDimnesion').load('html/GolsByDimension.html?'+ <%= new Random(1000).Next()%>,
+                    function () {
+
+                    });
+            })
+        </script>
+    </asp:Panel>
+
+    <%------------- -----------------%>
 
 
     <%---------------موجودی برش خورده ها------------------%>
@@ -88,19 +104,11 @@
             <style>
                 @font-face {
                     font-family: 'myfont';
-                    src: url('fonts/Far_Nazanin.eot'),
-                         url('fonts/glyphicons-halflings-regular.eot')format('embedded-opentype'),
-                         url('fonts/Far_Nazanin.eot?#FooAnything') format('embedded-opentype');
-                    src: local('☺'),
-                         url('fonts/Far_Nazanin.woff') format('woff'),
-                         url('fonts/Far_Nazanin.ttf') format('truetype'),
-                         url('fonts/Far_Nazanin.svg') format('svg'),
-                         url('fonts/glyphicons-halflings-regular.woff') format('woff'),
-                         url('fonts/glyphicons-halflings-regular.ttf') format('truetype'),
-                         url('fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg'),
-                         url('fonts/glyphicons-halflings-regular.woff2')format('woff2');
+                    src: url('fonts/Far_Nazanin.eot'), url('fonts/glyphicons-halflings-regular.eot')format('embedded-opentype'), url('fonts/Far_Nazanin.eot?#FooAnything') format('embedded-opentype');
+                    src: local('☺'), url('fonts/Far_Nazanin.woff') format('woff'), url('fonts/Far_Nazanin.ttf') format('truetype'), url('fonts/Far_Nazanin.svg') format('svg'), url('fonts/glyphicons-halflings-regular.woff') format('woff'), url('fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('fonts/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg'), url('fonts/glyphicons-halflings-regular.woff2')format('woff2');
                     font-weight: 400;
                 }
+
                 .panelwarning {
                     font-family: myfont;
                 }
@@ -115,14 +123,14 @@
                     font-family: myfont;
                 }
 
-                .table tr th {
-                    padding: 5px 5px !important;
-                }
+                    .table tr th {
+                        padding: 5px 5px !important;
+                    }
 
-                .table td {
-                    padding: 2px 5px !important;
-                    text-align: center;
-                }
+                    .table td {
+                        padding: 2px 5px !important;
+                        text-align: center;
+                    }
 
                 .bolderfooter {
                     font-size: 15pt;
@@ -487,6 +495,11 @@
             <asp:SqlDataSource ID="sql_cus_sheetcount_date" runat="server" ConnectionString="<%$ ConnectionStrings:flower_depot %>" SelectCommand="SELECT customer_id, customer_name FROM flower_customers ORDER BY customer_name"></asp:SqlDataSource>
             <label>مشتری</label>
             &nbsp;&nbsp;
+            <asp:DropDownList runat="server" CssClass="form-control" AppendDataBoundItems="True" ID="drDimension" DataSourceID="sqldimension" DataTextField="dim" DataValueField="id">
+                <asp:ListItem Value="-1">همه ابعاد</asp:ListItem>
+            </asp:DropDownList>
+            <asp:SqlDataSource ID="sqldimension" runat="server" ConnectionString="<%$ ConnectionStrings:flower_depot %>" SelectCommand="select dimension_id as id, flow_dimension as dim from flower_dimensions"></asp:SqlDataSource>
+            <label>ابعاد</label>
             <asp:DropDownList ID="dr_year1" TabIndex="6" CssClass="form-control" runat="server" Height="40px">
                 <asp:ListItem>سال</asp:ListItem>
                 <asp:ListItem>1384</asp:ListItem>
@@ -643,6 +656,7 @@
                         <Columns>
                             <asp:BoundField DataField="customer_name" HeaderText="نام مشتری" />
                             <asp:BoundField DataField="company_name" HeaderText="نام شرکت" />
+                            <asp:BoundField DataField="dimension" HeaderText="ابعاد" />
                             <asp:BoundField DataField="total_sheet" HeaderText="تعداد برگ" />
                         </Columns>
                     </asp:GridView>

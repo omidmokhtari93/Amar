@@ -17,18 +17,21 @@ public partial class bastebandi_item : System.Web.UI.Page
     protected void btnSabtItem_OnClick(object sender, EventArgs e)
     {
         var isService = 0;
-        var darb = 0 ;
-        int tds;
-        var vazn = 0;
+        var darb = 0;
+        var tedadDarKartonMadar = string.IsNullOrEmpty(txtAddTedadM.Text) ? 0 : Convert.ToInt16(txtAddTedadM.Text);
+        var tedadDarKartonChild = string.IsNullOrEmpty(txtAddtedadCH.Text) ? 0 : Convert.ToInt16(txtAddtedadCH.Text);
+        var tds = string.IsNullOrEmpty(txtAddServiceTedad.Text) ? 0 : Convert.ToInt32(txtAddServiceTedad.Text);
+        var vazn = string.IsNullOrEmpty(txtAddVazn.Text) ? 0 : Convert.ToDecimal(txtAddVazn.Text);
         if (chkAddIsService.Checked) { isService = 1; }
         if (chkAddDarb.Checked) { darb = 1; }
-        tds = string.IsNullOrEmpty(txtAddServiceTedad.Text) ? 0 : Convert.ToInt32(txtAddServiceTedad.Text);
         con.Open();
-        var insertItem = new SqlCommand("INSERT INTO [dbo].[Item]([nam],[mem],[TDK],[ser],[tds],[darb],[idser],[ghes],[vazn],[BoxMCode],[BoxChCode],[TBoxCh]) " +
-                                        "VALUES(N'" + txtAdditemName.Text + "' , N'" + txtAddmem.Text + "' , " + txtAddTedadM.Text + "," +
+        var insertItem = new SqlCommand("INSERT INTO [dbo].[Item]([nam],[mem],[TDK],[ser],[tds]" +
+                                        ",[darb],[idser],[ghes],[vazn],[BoxMCode],[BoxChCode],[TBoxCh]) " +
+                                        "VALUES(N'" + txtAdditemName.Text + "' , N'" + txtAddmem.Text + "' , " + tedadDarKartonMadar + "," +
                                         " " + isService + " , " + tds + " , " + darb + " , " + drAddServieCod.SelectedValue + "," +
-                                        " " + drAddTolid.SelectedValue + " , " + Convert.ToInt32(txtAddVazn.Text) + " , " + drAddMkartoon.SelectedValue + " ," +
-                                        " " + drAddCHkartoon.SelectedValue + " , " + txtAddtedadCH.Text + ")", con);
+                                        " " + drAddTolid.SelectedValue + " , " + vazn + " " +
+                                        ", " + drAddMkartoon.SelectedValue + " ," +
+                                        " " + drAddCHkartoon.SelectedValue + " , " + tedadDarKartonChild + ")", con);
         insertItem.ExecuteNonQuery();
         gridItems.DataBind();
         SetControlsNull();
@@ -40,18 +43,18 @@ public partial class bastebandi_item : System.Web.UI.Page
         if (e.CommandName == "editItem")
         {
             var index = int.Parse(e.CommandArgument.ToString());
-            var itemId = (int) gridItems.DataKeys[index]["ID"];
+            var itemId = (int)gridItems.DataKeys[index]["ID"];
             ItemID.Value = itemId.ToString();
             con.Open();
             var getItem = new SqlCommand("SELECT nam, mem, TDK, ser, tds, darb, idser, ghes," +
-                                         " vazn, BoxMCode, BoxChCode, TBoxCh FROM dbo.Item where ID = "+itemId+" ",con);
+                                         " vazn, BoxMCode, BoxChCode, TBoxCh FROM dbo.Item where ID = " + itemId + " ", con);
             var rd = getItem.ExecuteReader();
             if (rd.Read())
             {
                 txtAdditemName.Text = rd["nam"].ToString();
                 txtAddmem.Text = rd["mem"].ToString();
                 txtAddTedadM.Text = rd["TDK"].ToString();
-                if (Convert.ToInt32(rd["ser"]) == 1){chkAddIsService.Checked = true;}
+                if (Convert.ToInt32(rd["ser"]) == 1) { chkAddIsService.Checked = true; }
                 txtAddServiceTedad.Text = rd["tds"].ToString();
                 if (Convert.ToInt32(rd["darb"]) == 1) { chkAddDarb.Checked = true; }
                 drAddServieCod.SelectedValue = rd["idser"].ToString();
@@ -83,12 +86,12 @@ public partial class bastebandi_item : System.Web.UI.Page
         if (chkAddDarb.Checked) { darb = 1; }
         tds = string.IsNullOrEmpty(txtAddServiceTedad.Text) ? 0 : Convert.ToInt32(txtAddServiceTedad.Text);
         con.Open();
-        var updateItem = new SqlCommand("update Item set nam = N'"+txtAdditemName.Text+ "' , mem = '" + txtAddmem.Text + "'," +
+        var updateItem = new SqlCommand("update Item set nam = N'" + txtAdditemName.Text + "' , mem = '" + txtAddmem.Text + "'," +
                                         " TDK = " + txtAddTedadM.Text + " , ser = " + isService + " , " +
                                         " tds = " + tds + " , darb = " + darb + " , idser = " + drAddServieCod.SelectedValue + "," +
                                         " ghes = " + drAddTolid.SelectedValue + " , vazn = " + txtAddVazn.Text + " ," +
                                         " BoxMCode = " + drAddMkartoon.SelectedValue + " , BoxChCode = " + drAddCHkartoon.SelectedValue + " , " +
-                                        " TBoxCh = " + txtAddtedadCH.Text + " where ID = "+ItemID.Value+" ", con);
+                                        " TBoxCh = " + txtAddtedadCH.Text + " where ID = " + ItemID.Value + " ", con);
         updateItem.ExecuteNonQuery();
         gridItems.DataBind();
         btnEdit.Visible = false;

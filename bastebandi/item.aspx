@@ -20,7 +20,7 @@
             <div class="row" style="padding: 5px; margin: 0; text-align: right;">
                 <div class="col-sm-3">
                     <label>تعداد در کارتن کوچک</label>
-                    <asp:TextBox runat="server" ID="txtAddtedadCH" CssClass="form-control text-center" Width="100%"></asp:TextBox>
+                    <asp:TextBox runat="server" type="number" ID="txtAddtedadCH" CssClass="form-control text-center" Width="100%"></asp:TextBox>
                 </div>
                 <div class="col-sm-3">
                     <label>کارتن کوچک</label>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-sm-3">
                     <label>تعداد در کارتن مادر</label>
-                    <asp:TextBox runat="server" ID="txtAddTedadM" CssClass="form-control text-center" Width="100%"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="txtAddTedadM" type="number" CssClass="form-control text-center" Width="100%"></asp:TextBox>
                 </div>
                 <div class="col-sm-3">
                     <label>کارتن مادر</label>
@@ -85,7 +85,7 @@
                 </div>
                 <div class="col-sm-3">
                     <label>تعداد در سرویس</label>
-                    <asp:TextBox runat="server" ID="txtAddServiceTedad" CssClass="form-control text-center" Width="100%"></asp:TextBox>
+                    <asp:TextBox runat="server" type="number" ID="txtAddServiceTedad" CssClass="form-control text-center" Width="100%"></asp:TextBox>
                 </div>
             </div>
         </div>

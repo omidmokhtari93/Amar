@@ -45,6 +45,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "2")
         {
@@ -57,6 +58,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "3")
         {
@@ -69,6 +71,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "4")
         {
@@ -81,6 +84,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "5")
         {
@@ -93,6 +97,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "6")
         {
@@ -105,6 +110,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = false;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "7")
         {
@@ -117,6 +123,7 @@ public partial class report : System.Web.UI.Page
             pnlBoresh.Visible = false;
             pnl_bastebandi_depo.Visible = true;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "8")
         {
@@ -129,6 +136,7 @@ public partial class report : System.Web.UI.Page
             pnl_bastebandi_depo.Visible = false;
             pnlBoresh.Visible = true;
             pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = false;
         }
         else if (rbl_choose_report.SelectedValue == "9")
         {
@@ -141,6 +149,20 @@ public partial class report : System.Web.UI.Page
             pnl_bastebandi_depo.Visible = false;
             pnlBoresh.Visible = false;
             pnlMojoodiGol.Visible = true;
+            pnlTedadBargBaDimnesion.Visible = false;
+        }
+        else if (rbl_choose_report.SelectedValue == "10")
+        {
+            pnl_countof_cutomer_sheet.Visible = false;
+            pnl_sheetcount_accordingto_filters.Visible = false;
+            pnl_after93.Visible = false;
+            pnl_customer_items.Visible = false;
+            pnl_search_in_cus_items.Visible = false;
+            pnl_customer_enter_sheetcount.Visible = false;
+            pnl_bastebandi_depo.Visible = false;
+            pnlBoresh.Visible = false;
+            pnlMojoodiGol.Visible = false;
+            pnlTedadBargBaDimnesion.Visible = true;
         }
     } //ok
     protected void btn_sheetcount_report_OnClick(object sender, EventArgs e)
@@ -258,7 +280,7 @@ public partial class report : System.Web.UI.Page
     protected void btn_get_customer_entry_Sheetcount_OnClick(object sender, EventArgs e)
     {
         var startDate = dr_year0.Text + "/" + dr_month0.Text + "/" + dr_day0.Text;
-        var endData = dr_year1.Text + "/" + dr_month1.Text + "/" + dr_day1.Text;
+        var endDate = dr_year1.Text + "/" + dr_month1.Text + "/" + dr_day1.Text;
         var ds = new SqlDataSource
         {
             // production
@@ -267,18 +289,31 @@ public partial class report : System.Web.UI.Page
             //development
             ConnectionString = "Data Source=.;Initial Catalog=flower_depot;Integrated Security=True",
 
+            //SelectCommand = "SELECT '" + dr_cus_entr_sheetcount.SelectedItem.Text + "' as customer_name ," +
+            //                " '" + dr_company.SelectedItem.Text + "' as company_name ," +
+            //                " SUM(dbo.order_sheet_count.sheet_count) AS total_sheet " +
+            //                "FROM dbo.flower_entry INNER JOIN " +
+            //                "dbo.order_sheet_count ON dbo.flower_entry.id " +
+            //                "= dbo.order_sheet_count.flower_id " +
+            //                "WHERE(dbo.flower_entry.customer_name = " + dr_cus_entr_sheetcount.SelectedValue + " or " +
+            //                dr_cus_entr_sheetcount.SelectedValue + " = -1) " +
+            //                "AND(dbo.flower_entry.company_name = " + dr_company.SelectedValue + " or " +
+            //                dr_company.SelectedValue + " = -1) " +
+            //                "AND (order_sheet_count.recieve_date <= '" + endData +
+            //                "') AND (order_sheet_count.recieve_date >= '" + startDate + "')"
             SelectCommand = "SELECT '" + dr_cus_entr_sheetcount.SelectedItem.Text + "' as customer_name ," +
-                            " '" + dr_company.SelectedItem.Text + "' as company_name ," +
-                            " SUM(dbo.order_sheet_count.sheet_count) AS total_sheet " +
-                            "FROM dbo.flower_entry INNER JOIN " +
-                            "dbo.order_sheet_count ON dbo.flower_entry.id " +
-                            "= dbo.order_sheet_count.flower_id " +
-                            "WHERE(dbo.flower_entry.customer_name = " + dr_cus_entr_sheetcount.SelectedValue + " or " +
-                            dr_cus_entr_sheetcount.SelectedValue + " = -1) " +
-                            "AND(dbo.flower_entry.company_name = " + dr_company.SelectedValue + " or " +
-                            dr_company.SelectedValue + " = -1) " +
-                            "AND (order_sheet_count.recieve_date <= '" + endData +
-                            "') AND (order_sheet_count.recieve_date >= '" + startDate + "')"
+                            "'" + dr_company.SelectedItem.Text + "' as company_name , " +
+                            "SUM(order_sheet_count.sheet_count) AS total_sheet, " +
+                            "flower_dimensions.flow_dimension as dimension FROM flower_entry " +
+                            "INNER JOIN order_sheet_count ON flower_entry.id = order_sheet_count.flower_id " +
+                            "inner join flower_forms_entry on order_sheet_count.form_id = flower_forms_entry.id " +
+                            "inner join flower_dimensions on flower_forms_entry.dimension = flower_dimensions.dimension_id " +
+                            "WHERE(flower_entry.customer_name = " + dr_cus_entr_sheetcount.SelectedValue + "  or " + dr_cus_entr_sheetcount.SelectedValue + " = -1) " +
+                            "AND(flower_dimensions.dimension_id = " + drDimension.SelectedValue + " or " + drDimension.SelectedValue + " = -1) " +
+                            "AND(flower_entry.company_name = " + dr_company.SelectedValue + "  or " + dr_company.SelectedValue + " = -1) " +
+                            "AND(order_sheet_count.recieve_date <= '" + endDate + "') " +
+                            "AND(order_sheet_count.recieve_date >= '" + startDate + "') " +
+                            "group by flower_dimensions.flow_dimension"
         };
         ds.DataBind();
         grid_cus_enter_sheetcount.DataSource = ds;

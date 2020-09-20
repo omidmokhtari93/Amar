@@ -624,6 +624,76 @@ public class amar : System.Web.Services.WebService
         });
     }
 
+    [WebMethod]
+    public string GolsByDimension(int moshtari, string startDate, string endDate)
+    {
+        con.Open();
+        var cmd = new SqlCommand("select golha.id ,golha.gol from(select flower_id from ( select sum(sheetcount) as tedad , flower_id " +
+                        "from flower_forms_entry where flower_id in (select id from flower_entry " +
+                        "where (customer_name = " + moshtari + " or " + moshtari + " = -1) " +
+                        "and(last_enter_date >= '" + startDate + "' and last_enter_date <= '" + endDate + "'))  " +
+                        "group by flower_id)as gols where gols.tedad <> 0 union all " +
+                        "select flower_id from(select cast(sum(tedad * 0.7) as int) as tedad, ffe.flower_id " +
+                        "from new_halfcut inner join flower_forms_entry ffe on new_halfcut.formid = ffe.id " +
+                        "where flowid in (select id from flower_entry where (customer_name = " + moshtari + " or " + moshtari + " = -1) " +
+                        "and(last_enter_date >= '" + startDate + "' and last_enter_date <= '" + endDate + "'))  " +
+                        "group by ffe.flower_id) as nim)j inner join(select flower_entry.flower_name + ' / ' + flower_colors.flow_color + ' / ' + " +
+                        "flower_colortypes.flow_colortype + ' / ' + flower_formats.flow_format + ' / ' + flower_customers.customer_name" +
+                        " AS gol, flower_entry.id FROM flower_entry INNER JOIN flower_colors ON " +
+                        "flower_entry.flower_color = flower_colors.flowcolor_id INNER JOIN " +
+                        "flower_colortypes ON flower_entry.flower_colortype = flower_colortypes.colortype_id " +
+                        "INNER JOIN flower_customers ON flower_entry.customer_name = flower_customers.customer_id " +
+                        "INNER JOIN flower_formats ON flower_entry.flower_format = " +
+                        "flower_formats.flowformat_id)golha " +
+                        "on j.flower_id = golha.id group by golha.gol , golha.id", con);
+        var flowers = new List<MojoodiBaDimension>();
+        var rd = cmd.ExecuteReader();
+        while (rd.Read())
+        {
+            flowers.Add(new MojoodiBaDimension()
+            {
+                Flower = rd["gol"].ToString(),
+                Id = Convert.ToInt32(rd["id"])
+            });
+        }
+        con.Close();
+        foreach (var flower in flowers)
+        {
+            con.Open();
+            cmd = new SqlCommand("select fd.flow_dimension as dim,  sum(mojoodi.sheetcount) as sheetcount from " +
+                                 "(select dimension, sheetcount from flower_forms_entry where flower_id = " + flower.Id + " " +
+                                 "and(last_enter_date >= '" + startDate + "' and last_enter_date <= '" + endDate + "') and sheetcount <> 0 " +
+                                 "union all select dimension, cast(sum(tedad * 0.7) as int) as sheetcount from new_halfcut " +
+                                 "inner join flower_forms_entry as ffe on new_halfcut.formid = ffe.id where new_halfcut.flowid = " + flower.Id + " " +
+                                 "and(ffe.last_enter_date >= '" + startDate + "' and ffe.last_enter_date <= '" + endDate + "') " +
+                                 "group by dimension)mojoodi inner join flower_dimensions fd on mojoodi.dimension = fd.dimension_id " +
+                                 "group by fd.flow_dimension", con);
+            rd = cmd.ExecuteReader();
+            while (rd.Read())
+            {
+                flower.Items.Add(new
+                {
+                    Dimension = rd["dim"],
+                    Count = rd["sheetcount"]
+                });
+            }
+            con.Close();
+        }
+        return new JavaScriptSerializer().Serialize(flowers);
+    }
+
+}
+
+public class MojoodiBaDimension
+{
+    public string Flower { get; set; }
+    public int Id { get; set; }
+    public List<object> Items { get; set; }
+
+    public MojoodiBaDimension()
+    {
+        Items = new List<object>();
+    }
 }
 
 public class Controls

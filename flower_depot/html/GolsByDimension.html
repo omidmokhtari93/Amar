@@ -1,0 +1,159 @@
+﻿<div id="GolsByDimension">
+    <link href="../../flower_depot/Scripts/kamadatepicker.css" rel="stylesheet" />
+    <script src="../../flower_depot/Scripts/kamadatepicker.js"></script>
+    <script src="../../bastebandi/Scripts/notify.min.js"></script>
+    <style>
+        .loading {
+            width: 20px;
+            height: auto;
+            margin-top: 3px;
+            display: none;
+            float: left;
+        }
+        .mojoodi-table tr th {
+            border: 1px solid darkgray;
+            padding: 0 2px;
+            text-align: center;
+            font-size: 11pt;
+        }
+        .mojoodi-table {
+            width: 200px;
+            display: inline-block;
+            margin: 5px;
+            vertical-align: top;
+        }
+
+        .mojoodi-table tr td {
+            text-align: center;
+            border-collapse: collapse;
+            border: 1px solid darkgray;
+            background-color: white;
+            padding: 1px;
+        }
+    </style>
+    <script>
+        function AjaxData(obj) {
+            $.ajax({
+                type: 'POST',
+                url: '../flower_depot/' + obj.url,
+                data: JSON.stringify(obj.param),
+                contentType: 'application/json;',
+                dataType: 'json',
+                success: obj.func,
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+        function ElementRedalert(ele, pos, txt) {
+            var element;
+            if (typeof ele == "string") { element = $("#" + ele); } else { element = ele; }
+            $(element).notify(txt, { position: pos, className: "error" });
+        }
+
+/**/</script>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">تعداد آیتم های مشتری</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div>&nbsp;</div>
+                    <button class="button" id="GetReport" onclick="getReport()" type="button">
+                        <img src="../../bastebandi/Images/pIkfp.gif" class="loading" />  گزارش گیری 
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <div>&nbsp;</div>
+                    <select class="form-control" id="drmoshtari" style="width: 100%; direction: rtl;">
+                        <option value="-1">همه مشتری ها</option>
+                    </select>
+                </div>
+                <div class="col-md-3 text-right">
+                    تا تاریخ
+                    <input class="form-control text-center" id="to" style="width: 100%;" readonly />
+                </div>
+                <div class="col-md-3 text-right">
+                    از تاریخ
+                    <input class="form-control text-center" id="from" style="width: 100%;" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer text-center" id="reportArea"></div>
+    </div>
+
+    <script>
+        var customOptions = {
+            placeholder: "روز / ماه / سال",
+            twodigit: true,
+            closeAfterSelect: true,
+            nextButtonIcon: "glyphicon glyphicon-chevron-right",
+            previousButtonIcon: "glyphicon glyphicon-chevron-left",
+            buttonsColor: "blue",
+            forceFarsiDigits: true,
+            markToday: true,
+            markHolidays: true,
+            highlightSelectedDay: true,
+            sync: true,
+            gotoToday: true
+        };
+        kamaDatepicker('from', customOptions);
+        kamaDatepicker('to', customOptions);
+
+        $(function () {
+            fillControls();
+            function fillControls() {
+                AjaxData({
+                    url: 'amar.asmx/FillControls',
+                    param: {},
+                    func: fillControls
+                });
+
+                function fillControls(e) {
+                    const d = JSON.parse(e.d);
+                    let moshtariOptions = []
+                    for (var i = 0; i < d[2].Id.length; i++) {
+                        moshtariOptions.push('<option value="' + d[2].Id[i] + '">' + d[2].Text[i] + '</option>');
+                    }
+                    $('#drmoshtari').append(moshtariOptions.join(''));
+                }
+            }
+        })
+
+        const getReport = e => {
+            if ($('#from').val() == "" || $('#to').val() == "") {
+                ElementRedalert('GetReport', 'bottom center', 'لطفا بازه زمانی را مشخص نمایید');
+                return;
+            }
+            $('.loading').show();
+            $('#reportArea').empty();
+            AjaxData({
+                url: 'amar.asmx/GolsByDimension',
+                param: {
+                    moshtari: parseInt($('#drmoshtari').val()),
+                    startDate: $('#from').val(),
+                    endDate: $('#to').val()
+                },
+                func: (e) => {
+                    var d = JSON.parse(e.d);
+                    var body = [];
+                    for (var i = 0; i < d.length; i++) {
+                        body.push('<table class="mojoodi-table" style="width:15%;">' +
+                            '<tr>' +
+                            '<th colspan="2" style="font-weight:800;width:15%;">' + d[i].Flower + '</th>' +
+                            '</tr>');
+                        for (var j = 0; j < d[i].Items.length; j++) {
+                            body.push('<tr>' +
+                                '<td style="padding:1px;">' + d[i].Items[j].Count + '</td>' +
+                                '<td style="padding:1px;">' + d[i].Items[j].Dimension + '</td>' +
+                                '</tr>');
+                        }
+                        body.push('</table>');
+                    }
+                    $('#reportArea').append(body.join(''));
+                    $('.loading').hide();
+                }
+            });
+        }
+    </script>
+</div>

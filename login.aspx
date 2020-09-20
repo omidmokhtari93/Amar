@@ -116,7 +116,7 @@
 <body>
     <form id="form1" runat="server">
         <script>
-            var images = ["Images/login-back.jpg", "Images/login-back1.jpg", "Images/login-back2.jpg", "Images/login-back3.jpg", "Images/login-back4.jpg", "Images/login-back5.jpg", "Images/login-back6.jpg"];
+            var images = ["Images/login-back.jpg", "Images/login-back1.jpg", "Images/login-back2.jpg", "Images/login-back3.jpg", "Images/login-back4.jpg", "Images/login-back5.jpg"];
             $(function () {
                 var i = 0;
                 $(".backImage").css("background-image", "url(" + images[i] + ")");
